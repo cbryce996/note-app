@@ -10,14 +10,15 @@ import javax.inject.Singleton
 @Singleton
 class NoteRepository @Inject constructor(private val noteDao: NoteDAO) : INoteRepository {
 
-    suspend fun insertNote(note: Note) =
+    override suspend fun insertNote(note: Note) =
         noteDao.insertNote(note)
 
-    suspend fun deleteNote(note: Note) =
+    override suspend fun deleteNote(note: Note) =
         noteDao.deleteNote(note)
 
-    suspend fun getNoteById(id: Int) =
+    override suspend fun getNoteById(id: Int): Note? =
         noteDao.getNoteById(id)
 
-    suspend fun getNotes(): Flow<List<Note>> = noteDao.getNotes()
+    override suspend fun getNotes(): Flow<List<Note>> = noteDao.getNotes()
+
 }

@@ -12,4 +12,8 @@ import com.example.notes.infrastructure.persistence.daos.NoteDAO
 abstract class NoteDatabase : RoomDatabase() {
 
     abstract val noteDao: NoteDAO
+
+    companion object {
+        const val DATABASE_NAME = "notes_db"
+    }
 }
