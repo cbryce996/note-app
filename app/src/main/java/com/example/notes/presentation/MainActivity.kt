@@ -10,9 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.notes.application.note.NoteService
 import com.example.notes.ui.theme.NotesTheme
+import javax.inject.Inject
 
-class MainActivity : ComponentActivity() {
+class MainActivity @Inject constructor(private val noteService: NoteService) : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

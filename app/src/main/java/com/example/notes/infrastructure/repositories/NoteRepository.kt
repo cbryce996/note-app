@@ -4,8 +4,11 @@ import com.example.notes.application.common.interfaces.repositories.INoteReposit
 import com.example.notes.domain.note.Note
 import com.example.notes.infrastructure.persistence.daos.NoteDAO
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-abstract class NoteRepository(private val noteDao: NoteDAO) : INoteRepository {
+@Singleton
+class NoteRepository @Inject constructor(private val noteDao: NoteDAO) : INoteRepository {
 
     suspend fun insertNote(note: Note) =
         noteDao.insertNote(note)
