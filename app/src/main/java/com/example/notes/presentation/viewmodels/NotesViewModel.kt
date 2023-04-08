@@ -23,6 +23,11 @@ class NotesViewModel @Inject constructor(
     // Function to be called from UI when event takes place
     fun onEvent(event: NotesEvent) {
         when(event) {
+            is NotesEvent.CreateNote -> {
+                viewModelScope.launch {
+                    noteService.createNote(event.note)
+                }
+            }
             is NotesEvent.DeleteNote -> {
                 // Perform action if event is of type
                 viewModelScope.launch {
