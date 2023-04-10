@@ -1,13 +1,12 @@
 package com.example.notes.presentation.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.notes.domain.note.Note
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteItem (
     note: Note,
@@ -27,19 +27,19 @@ fun NoteItem (
     onDeleteClick: () -> Unit
 ) {
     Box(modifier = modifier) {
-        Canvas(modifier
-            .matchParentSize()
+        Card(
+            modifier = Modifier.matchParentSize(),
+            onClick = {
+
+            },
+            shape = RoundedCornerShape(cornerRadius),
         ) {
-            drawRoundRect(
-                color = Color.Yellow,
-                size = size,
-                cornerRadius = CornerRadius(cornerRadius.toPx())
-            )
+
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(25.dp)
         ) {
             Text(
                 text = note.title,
@@ -56,7 +56,9 @@ fun NoteItem (
             )
         }
         IconButton(
-            modifier = Modifier.align(Alignment.BottomEnd),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(5.dp),
             onClick = onDeleteClick
         ) {
             Icon(

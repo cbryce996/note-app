@@ -9,8 +9,6 @@ import com.example.notes.presentation.events.NotesEvent
 import com.example.notes.presentation.viewstates.NotesState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,13 +51,9 @@ class NotesViewModel @Inject constructor(
         getNotesJob = viewModelScope.launch {
             noteService.getNotes()
                 .collect { notes ->
-                    if (notes == null || notes.isEmpty()) {
-                        println("null")
-                    } else {
-                        _state.value = state.value.copy(
-                            notes = notes
-                        )
-                    }
+                    _state.value = state.value.copy(
+                        notes = notes
+                    )
                 }
         }
     }
