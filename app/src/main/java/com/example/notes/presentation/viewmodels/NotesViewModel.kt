@@ -9,6 +9,7 @@ import com.example.notes.presentation.events.NotesEvent
 import com.example.notes.presentation.viewstates.NotesState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class NotesViewModel @Inject constructor(
                 viewModelScope.launch {
                     noteService.createNote(event.note)
                 }
+                getNotes()
             }
             is NotesEvent.DeleteNote -> {
                 // Perform action if event is of type
@@ -49,8 +51,14 @@ class NotesViewModel @Inject constructor(
         getNotesJob?.cancel()
         getNotesJob = viewModelScope.launch {
             noteService.getNotes()
-                .onEach { notes ->
-                    _state.value = state.value.copy(notes = notes)
+                .collect { notes ->
+                    if (notes == null || notes.isEmpty()) {
+                        println("null")
+                    } else {
+                        _state.value = state.value.copy(
+                            notes = notes
+                        )
+                    }
                 }
         }
     }

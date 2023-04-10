@@ -11,6 +11,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.notes.domain.note.Note
+import com.example.notes.presentation.components.NoteItem
 import com.example.notes.presentation.components.NotesScreen
 import com.example.notes.presentation.util.Screen
 import com.example.notes.ui.theme.NotesTheme
@@ -33,6 +35,7 @@ class MainActivity() : ComponentActivity() {
                     ) {
                         composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
+                            //NoteItem(Note(), onDeleteClick = {})
                         }
                     }
                 }

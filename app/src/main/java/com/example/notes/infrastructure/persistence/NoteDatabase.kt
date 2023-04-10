@@ -1,5 +1,6 @@
 package com.example.notes.infrastructure.persistence
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.notes.domain.note.Note

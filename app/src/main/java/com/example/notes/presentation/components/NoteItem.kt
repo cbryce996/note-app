@@ -26,7 +26,7 @@ fun NoteItem (
     Box(modifier = modifier) {
         Canvas(modifier.matchParentSize()) {
             drawRoundRect(
-                color = Color.DarkGray,
+                color = Color.Yellow,
                 size = size,
                 cornerRadius = CornerRadius(cornerRadius.toPx())
             )

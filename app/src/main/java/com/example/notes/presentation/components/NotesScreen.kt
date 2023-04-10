@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notes.domain.note.Note
 import com.example.notes.presentation.events.NotesEvent
 import com.example.notes.presentation.viewmodels.NotesViewModel
 
@@ -30,7 +31,7 @@ fun NotesScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-
+                viewModel.onEvent(NotesEvent.CreateNote(Note()))
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
