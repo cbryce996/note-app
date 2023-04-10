@@ -1,4 +1,4 @@
-package com.example.notes.presentation.viewstate
+package com.example.notes.presentation.viewstates
 
 import com.example.notes.domain.note.Note
 
