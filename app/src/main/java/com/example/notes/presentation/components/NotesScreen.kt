@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -18,6 +19,7 @@ import androidx.navigation.NavController
 import com.example.notes.domain.note.Note
 import com.example.notes.presentation.events.NotesEvent
 import com.example.notes.presentation.viewmodels.NotesViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -35,11 +37,11 @@ fun NotesScreen(
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
-        }
-    ) { innerPadding ->
+        },
+    ) {
         Column(
             modifier = Modifier
-                .padding(paddingValues = innerPadding)
+                .padding(it)
                 .fillMaxSize()
         ) {
             Row(
@@ -48,16 +50,20 @@ fun NotesScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Your note"
+                    text = "Your notes",
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+            ) {
                 items(state.notes) { note ->
                     NoteItem(
                         note = note,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(5.dp)
                             .clickable {
 
                             },

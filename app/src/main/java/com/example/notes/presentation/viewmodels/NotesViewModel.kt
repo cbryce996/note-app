@@ -43,6 +43,7 @@ class NotesViewModel @Inject constructor(
                 viewModelScope.launch {
                     noteService.deleteNote(event.note)
                 }
+                getNotes()
             }
         }
     }
