@@ -16,7 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.notes.domain.note.Note
+import com.example.notes.presentation.util.Screen
+import com.example.notes.presentation.viewmodels.AddEditViewModel
+import com.example.notes.presentation.viewmodels.NotesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,14 +29,13 @@ fun NoteItem (
     note: Note,
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 15.dp,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onNoteClick: () -> Unit
 ) {
     Box(modifier = modifier) {
         Card(
             modifier = Modifier.matchParentSize(),
-            onClick = {
-
-            },
+            onClick = onNoteClick,
             shape = RoundedCornerShape(cornerRadius),
         ) {
 

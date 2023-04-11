@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class NoteService @Inject constructor(private val noteRepository: INoteRepository) {
-
     suspend fun getNotes(): Flow<List<Note>> {
         return noteRepository.getNotes()
     }
@@ -19,4 +18,7 @@ class NoteService @Inject constructor(private val noteRepository: INoteRepositor
         return noteRepository.deleteNote(note)
     }
 
+    suspend fun getNoteById(id: Long) : Note? {
+        return noteRepository.getNoteById(id)
+    }
 }

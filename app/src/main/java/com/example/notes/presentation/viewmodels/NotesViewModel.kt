@@ -43,6 +43,9 @@ class NotesViewModel @Inject constructor(
                 }
                 getNotes()
             }
+            is NotesEvent.EditNote -> {
+
+            }
         }
     }
 

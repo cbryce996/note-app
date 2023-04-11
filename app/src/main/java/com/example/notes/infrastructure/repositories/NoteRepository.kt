@@ -16,7 +16,7 @@ class NoteRepository @Inject constructor(private val noteDao: NoteDAO) : INoteRe
     override suspend fun deleteNote(note: Note) =
         noteDao.deleteNote(note)
 
-    override suspend fun getNoteById(id: Int): Note? =
+    override suspend fun getNoteById(id: Long): Note? =
         noteDao.getNoteById(id)
 
     override suspend fun getNotes(): Flow<List<Note>> = noteDao.getNotes()
