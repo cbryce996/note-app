@@ -1,5 +1,6 @@
 package com.example.notes.presentation.components
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigationDefaults
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
@@ -10,6 +11,8 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.notes.presentation.util.Screen
 
@@ -22,7 +25,11 @@ fun BottomBar(
         content = {
             BottomNavigationItem(
                 icon = {
-                    Icon(imageVector = Icons.Default.Home,"")
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        imageVector = Icons.Default.Home,
+                        contentDescription = ""
+                    )
                 },
                 selected = (false),
                 onClick = {
@@ -31,14 +38,22 @@ fun BottomBar(
             )
             BottomNavigationItem(
                 icon = {
-                    Icon(imageVector = Icons.Default.Search,"")
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        imageVector = Icons.Default.Search,
+                        contentDescription = ""
+                    )
                 },
                 selected = (false),
                 onClick = {}
             )
             BottomNavigationItem(
                 icon = {
-                    Icon(imageVector = Icons.Default.Person,"")
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        imageVector = Icons.Default.Person,
+                        contentDescription = ""
+                    )
                 },
                 selected = (false),
                 onClick = {

@@ -1,11 +1,10 @@
-package com.example.notes.presentation.viewmodels
+package com.example.notes.presentation.login.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginSignupViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 }

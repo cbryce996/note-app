@@ -1,12 +1,15 @@
 package com.example.notes.presentation.components
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.notes.presentation.util.Screen
@@ -36,6 +39,7 @@ fun TopBar(
                     Icon(
                         imageVector =  Icons.Rounded.Close,
                         contentDescription = null,
+                        modifier = Modifier.size(25.dp),
                         tint = Color.White
                     )
                 }

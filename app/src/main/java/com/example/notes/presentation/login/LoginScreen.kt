@@ -11,14 +11,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notes.presentation.components.BottomBar
 import com.example.notes.presentation.components.TopBar
-import com.example.notes.presentation.util.Screen
-import com.example.notes.presentation.viewmodels.LoginSignupViewModel
+import com.example.notes.presentation.login.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginSignupScreen (
     navController: NavController,
-    viewModel: LoginSignupViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     Scaffold (topBar = {
         TopBar(

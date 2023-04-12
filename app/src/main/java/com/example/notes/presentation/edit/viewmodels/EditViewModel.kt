@@ -1,4 +1,4 @@
-package com.example.notes.presentation.viewmodels
+package com.example.notes.presentation.edit.viewmodels
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,16 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notes.application.note.NoteService
 import com.example.notes.domain.note.Note
-import com.example.notes.presentation.events.AddEditEvent
-import com.example.notes.presentation.events.NotesEvent
-import com.example.notes.presentation.viewstates.NoteTextFieldState
-import com.example.notes.presentation.viewstates.NotesState
+import com.example.notes.presentation.edit.events.EditEvent
+import com.example.notes.presentation.edit.states.NoteTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddEditViewModel @Inject constructor(
+class EditViewModel @Inject constructor(
     private val noteService: NoteService,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -49,19 +47,19 @@ class AddEditViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: AddEditEvent) {
+    fun onEvent(event: EditEvent) {
         when (event) {
-            is AddEditEvent.EnteredTitle -> {
+            is EditEvent.EnteredTitle -> {
                 _noteTitle.value = noteTitle.value.copy(
                     text = event.value
                 )
             }
-            is AddEditEvent.EnteredContent -> {
+            is EditEvent.EnteredContent -> {
                 _noteContent.value = noteContent.value.copy(
                     text = event.value
                 )
             }
-            is AddEditEvent.SaveNote -> {
+            is EditEvent.SaveNote -> {
                 viewModelScope.launch {
                     noteService.createNote(
                         Note(

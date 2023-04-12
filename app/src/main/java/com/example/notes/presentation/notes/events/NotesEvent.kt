@@ -1,4 +1,4 @@
-package com.example.notes.presentation.events
+package com.example.notes.presentation.notes.events
 
 import com.example.notes.domain.note.Note
 

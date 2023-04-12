@@ -1,4 +1,4 @@
-package com.example.notes.presentation.viewmodels
+package com.example.notes.presentation.account.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

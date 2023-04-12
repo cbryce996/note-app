@@ -3,21 +3,17 @@ package com.example.notes.presentation.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.notes.presentation.events.NotesEvent
+import com.example.notes.presentation.notes.events.NotesEvent
 import com.example.notes.presentation.util.Screen
-import com.example.notes.presentation.viewmodels.NotesViewModel
+import com.example.notes.presentation.notes.viewmodels.NotesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,65 +1,80 @@
-package com.example.notes.presentation.screens
+package com.example.notes.presentation.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.notes.presentation.components.BottomBar
-import com.example.notes.presentation.components.TopBar
-import com.example.notes.presentation.events.AddEditEvent
+import com.example.notes.domain.note.Note
+import com.example.notes.presentation.edit.events.EditEvent
 import com.example.notes.presentation.util.Screen
-import com.example.notes.presentation.viewmodels.AccountViewModel
+import com.example.notes.presentation.edit.viewmodels.EditViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(
+fun AddEditScreen (
     navController: NavController,
-    viewModel: AccountViewModel = hiltViewModel()
+    viewModel: EditViewModel = hiltViewModel(),
 ) {
+    val titleState = viewModel.noteTitle.value
+    val contentState = viewModel.noteContent.value
+
     Scaffold(
         topBar = {
             TopBar(
                 hasCloseButton = true,
-                titleText = "Your Account",
+                titleText = "Add/Edit Note",
                 navController = navController
             )
         },
         bottomBar = {
             BottomBar(navController)
         },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                viewModel.onEvent(
+                    EditEvent.SaveNote(
+                    Note(
+                        title = titleState.text,
+                        content = contentState.text
+                    )
+                ))
+                navController.navigate(Screen.NotesScreen.route)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Done,
+                    contentDescription = "Add note",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        },
         floatingActionButtonPosition = FabPosition.Center,
         content = {
-            Column(
+            Column (
                 modifier = Modifier
                     .padding(it)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
-                    Icon(
-                        modifier = Modifier
-                            .size(200.dp),
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Add note",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    Spacer(modifier = Modifier.size(15.dp))
+                    // TODO: Make this a reusable component
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = "Username",
+                        value = titleState.text,
                         onValueChange = {
+                            viewModel.onEvent(EditEvent.EnteredTitle(it))
                         },
-                        readOnly = true,
                         label = {
-                            Text(text = "Username:")
+                            Text(text = "Note Title:")
+                        },
+                        placeholder = {
+                            Text(text = "Please enter a title for your note")
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             disabledTextColor = Color.Transparent,
@@ -71,33 +86,17 @@ fun AccountScreen(
                     )
                     TextField(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxSize(),
                         maxLines = 30,
-                        value = "Password",
+                        value = contentState.text,
                         onValueChange = {
+                            viewModel.onEvent(EditEvent.EnteredContent(it))
                         },
-                        readOnly = true,
                         label = {
-                            Text(text = "Password:")
+                            Text(text = "Note Content:")
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            disabledTextColor = Color.Transparent,
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        )
-                    )
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        maxLines = 30,
-                        value = "Email",
-                        onValueChange = {
-                        },
-                        readOnly = true,
-                        label = {
-                            Text(text = "Email:")
+                        placeholder = {
+                            Text(text = "Please the content of your note")
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             disabledTextColor = Color.Transparent,
