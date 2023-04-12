@@ -1,6 +1,6 @@
 package com.example.notes.application.note
 
-import com.example.notes.application.common.interfaces.repositories.INoteRepository
+import com.example.notes.application.interfaces.repositories.INoteRepository
 import com.example.notes.domain.note.Note
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

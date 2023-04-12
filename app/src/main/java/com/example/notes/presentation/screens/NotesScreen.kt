@@ -1,28 +1,23 @@
 package com.example.notes.presentation.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.notes.domain.note.Note
 import com.example.notes.presentation.events.NotesEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.viewmodels.NotesViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,19 +29,14 @@ fun NotesScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Your Notes")
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+            TopBar(
+                hasCloseButton = false,
+                navController = navController,
+                titleText = "Your Notes"
             )
         },
         bottomBar = {
-            BottomAppBar (
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Text("Bottom App Bar")
-            }
+            BottomBar(navController)
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -59,6 +49,7 @@ fun NotesScreen(
                 )
             }
         },
+        floatingActionButtonPosition = FabPosition.Center,
         content = {
             Column(
                 modifier = Modifier

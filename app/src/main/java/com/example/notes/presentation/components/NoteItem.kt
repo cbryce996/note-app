@@ -1,17 +1,24 @@
 package com.example.notes.presentation.components
 
+import android.graphics.drawable.GradientDrawable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -23,16 +30,19 @@ import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.viewmodels.AddEditViewModel
 import com.example.notes.presentation.viewmodels.NotesViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun NoteItem (
     note: Note,
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 15.dp,
+    cornerRadius: Dp = 10.dp,
     onDeleteClick: () -> Unit,
     onNoteClick: () -> Unit
 ) {
-    Box(modifier = modifier) {
+    val swipeableState = rememberSwipeableState(0)
+    Box(
+        modifier = modifier
+    ) {
         Card(
             modifier = Modifier.matchParentSize(),
             onClick = onNoteClick,
@@ -43,7 +53,7 @@ fun NoteItem (
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(25.dp)
+                .padding(15.dp)
         ) {
             Text(
                 text = note.title,
@@ -61,7 +71,7 @@ fun NoteItem (
         }
         IconButton(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .align(Alignment.CenterEnd)
                 .padding(5.dp),
             onClick = onDeleteClick
         ) {

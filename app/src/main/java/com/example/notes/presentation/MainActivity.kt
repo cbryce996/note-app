@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.notes.presentation.components.*
+import com.example.notes.presentation.screens.AccountScreen
+import com.example.notes.presentation.screens.LoginSignupScreen
 import com.example.notes.presentation.util.Screen
 import com.example.notes.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +33,14 @@ class MainActivity() : ComponentActivity() {
                         startDestination = Screen.NotesScreen.route
                     ) {
                         composable(route = Screen.NotesScreen.route) {
-                            NotesScreen(navController = navController)
+                            NotesScreen(
+                                navController = navController
+                            )
+                        }
+                        composable(route = Screen.LoginSignupScreen.route) {
+                            LoginSignupScreen(
+                                navController = navController
+                            )
                         }
                         composable(
                             route = Screen.AddEditScreen.route +
