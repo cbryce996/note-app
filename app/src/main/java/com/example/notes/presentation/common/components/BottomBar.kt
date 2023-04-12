@@ -1,4 +1,4 @@
-package com.example.notes.presentation.components
+package com.example.notes.presentation.common.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigationDefaults
@@ -57,7 +57,7 @@ fun BottomBar(
                 },
                 selected = (false),
                 onClick = {
-                    navController.navigate(Screen.LoginSignupScreen.route)
+                    navController.navigate(Screen.LoginScreen.route)
                 }
             )
         }

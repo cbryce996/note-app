@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.notes.application.note.NoteService
 import com.example.notes.domain.note.Note
 import com.example.notes.presentation.edit.events.EditEvent
-import com.example.notes.presentation.edit.states.NoteTextFieldState
+import com.example.notes.presentation.common.states.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,14 +18,13 @@ class EditViewModel @Inject constructor(
     private val noteService: NoteService,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    // State for notes view model
+    private val _noteTitle = mutableStateOf(TextFieldState())
+    val noteTitle: State<TextFieldState> = _noteTitle
 
     // State for notes view model
-    private val _noteTitle = mutableStateOf(NoteTextFieldState())
-    val noteTitle: State<NoteTextFieldState> = _noteTitle
-
-    // State for notes view model
-    private val _noteContent = mutableStateOf(NoteTextFieldState())
-    val noteContent: State<NoteTextFieldState> = _noteContent
+    private val _noteContent = mutableStateOf(TextFieldState())
+    val noteContent: State<TextFieldState> = _noteContent
 
     private var currentNoteId: Long? = null
 

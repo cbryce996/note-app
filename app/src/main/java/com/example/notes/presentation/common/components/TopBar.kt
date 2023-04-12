@@ -1,4 +1,4 @@
-package com.example.notes.presentation.components
+package com.example.notes.presentation.common.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons

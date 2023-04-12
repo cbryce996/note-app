@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.notes.presentation.components.BottomBar
-import com.example.notes.presentation.components.TopBar
+import com.example.notes.presentation.common.components.BottomBar
+import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.account.viewmodels.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

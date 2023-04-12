@@ -12,24 +12,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
-import com.example.notes.presentation.login.events.LoginEvent
-import com.example.notes.presentation.login.viewmodels.LoginViewModel
-import com.example.notes.presentation.util.Screen
+import com.example.notes.presentation.login.viewmodels.SignupViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen (
+fun SignupScreen (
     navController: NavController,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: SignupViewModel = hiltViewModel()
 ) {
-    val usernameState = viewModel.username.value
-    val passwordState = viewModel.password.value
-
-    Scaffold (topBar = {
-        TopBar(
-            hasCloseButton = true,
-            titleText = "Login",
-            navController = navController
+    Scaffold (
+        topBar = {
+            TopBar(
+                hasCloseButton = true,
+                titleText = "Signup",
+                navController = navController
             )
         },
         bottomBar = {
@@ -44,7 +40,7 @@ fun LoginScreen (
                 verticalArrangement = Arrangement.Center,
                 content = {
                     Text(
-                        text = "Login",
+                        text = "Signup",
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleLarge
@@ -54,22 +50,18 @@ fun LoginScreen (
                         modifier = Modifier.width(250.dp),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.secondary,
-                        text = "To access and sync your notes across devices, please log in.",
+                        text = "Please provide your details to sign up for a new account.",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.size(16.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = usernameState.text?: "Please enter your username",
+                        value = "Username",
                         onValueChange = {
-                            viewModel.onEvent(LoginEvent.EnteredUsername(it))
                         },
                         label = {
                             Text(text = "Username:")
-                        },
-                        placeholder = {
-                            Text(text = "Please enter your username")
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             disabledTextColor = Color.Transparent,
@@ -83,15 +75,47 @@ fun LoginScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = passwordState.text,
+                        value = "E-mail",
                         onValueChange = {
-                            viewModel.onEvent(LoginEvent.EnteredPassword(it))
+                        },
+                        label = {
+                            Text(text = "E-mail:")
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            disabledTextColor = Color.Transparent,
+                            containerColor = Color.Transparent,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            disabledIndicatorColor = Color.Transparent
+                        )
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    TextField(
+                        modifier = Modifier,
+                        maxLines = 30,
+                        value = "Password",
+                        onValueChange = {
                         },
                         label = {
                             Text(text = "Password:")
                         },
-                        placeholder = {
-                            Text(text = "Please enter your password")
+                        colors = TextFieldDefaults.textFieldColors(
+                            disabledTextColor = Color.Transparent,
+                            containerColor = Color.Transparent,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            disabledIndicatorColor = Color.Transparent
+                        )
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    TextField(
+                        modifier = Modifier,
+                        maxLines = 30,
+                        value = "Re-Type Password",
+                        onValueChange = {
+                        },
+                        label = {
+                            Text(text = "Re-Type Password:")
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             disabledTextColor = Color.Transparent,
@@ -105,16 +129,6 @@ fun LoginScreen (
                     Row {
                         Button(
                             onClick = { /*TODO*/ }
-                        ) {
-                            Text(
-                                text = "Log In"
-                            )
-                        }
-                        Spacer(modifier = Modifier.size(8.dp))
-                        Button(
-                            onClick = {
-                                navController.navigate(Screen.SignupScreen.route)
-                            }
                         ) {
                             Text(
                                 text = "Sign Up"

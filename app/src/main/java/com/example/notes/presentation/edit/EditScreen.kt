@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notes.domain.note.Note
+import com.example.notes.presentation.common.components.BottomBar
+import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.edit.events.EditEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.edit.viewmodels.EditViewModel
