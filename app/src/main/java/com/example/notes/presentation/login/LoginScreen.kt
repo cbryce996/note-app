@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.login.events.LoginEvent
@@ -24,6 +25,7 @@ import com.example.notes.presentation.util.Screen
 @Composable
 fun LoginScreen (
     navController: NavController,
+    appViewModel: AppViewModel,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     // Handle username sate
@@ -42,7 +44,10 @@ fun LoginScreen (
             )
         },
         bottomBar = {
-            BottomBar(navController)
+            BottomBar(
+                navController = navController,
+                appViewModel = appViewModel
+            )
         },
         content = {
             Column(

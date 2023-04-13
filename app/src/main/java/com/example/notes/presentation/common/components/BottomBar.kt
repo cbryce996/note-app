@@ -1,7 +1,6 @@
 package com.example.notes.presentation.common.components
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.BottomNavigationDefaults
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -14,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.util.Screen
 
 @Composable
 fun BottomBar(
-    navController: NavController
+    navController: NavController,
+    appViewModel: AppViewModel
 ) {
     BottomAppBar (
         containerColor = MaterialTheme.colorScheme.primary,
@@ -57,7 +58,11 @@ fun BottomBar(
                 },
                 selected = (false),
                 onClick = {
-                    navController.navigate(Screen.LoginScreen.route)
+                    if (appViewModel.loggedIn.value.loggedIn) {
+                        navController.navigate(Screen.AccountScreen.route)
+                    } else {
+                        navController.navigate(Screen.LoginScreen.route)
+                    }
                 }
             )
         }

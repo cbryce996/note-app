@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notes.domain.note.Note
 import com.example.notes.domain.user.User
+import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.login.viewmodels.SignupViewModel
@@ -25,6 +26,7 @@ import com.example.notes.presentation.util.Screen
 @Composable
 fun SignupScreen (
     navController: NavController,
+    appViewModel: AppViewModel,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
     // HandleUsernameState
@@ -49,7 +51,10 @@ fun SignupScreen (
             )
         },
         bottomBar = {
-            BottomBar(navController)
+            BottomBar(
+                navController = navController,
+                appViewModel = appViewModel
+            )
         },
         content = {
             Column(

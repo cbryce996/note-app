@@ -1,5 +1,6 @@
 package com.example.notes.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.NoteItem
 import com.example.notes.presentation.common.components.TopBar
@@ -22,6 +24,7 @@ import com.example.notes.presentation.notes.viewmodels.NotesViewModel
 @Composable
 fun NotesScreen(
     navController: NavController,
+    appViewModel: AppViewModel,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -35,11 +38,15 @@ fun NotesScreen(
             )
         },
         bottomBar = {
-            BottomBar(navController)
+            BottomBar(
+                navController = navController,
+                appViewModel = appViewModel
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 navController.navigate(Screen.AddEditScreen.route)
+                Log.i("Testing:", "Injected dependency " + appViewModel.user.value)
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,

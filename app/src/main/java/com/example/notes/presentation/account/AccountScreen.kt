@@ -14,11 +14,13 @@ import androidx.navigation.NavController
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.account.viewmodels.AccountViewModel
+import com.example.notes.presentation.app.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountScreen(
     navController: NavController,
+    appViewModel: AppViewModel,
     viewModel: AccountViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -30,7 +32,10 @@ fun AccountScreen(
             )
         },
         bottomBar = {
-            BottomBar(navController)
+            BottomBar(
+                navController = navController,
+                appViewModel = appViewModel
+            )
         },
         floatingActionButtonPosition = FabPosition.Center,
         content = {

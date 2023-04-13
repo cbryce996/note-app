@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notes.application.user.UserService
 import com.example.notes.domain.user.User
+import com.example.notes.presentation.app.AppViewModel
+import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.common.states.ErrorState
 import com.example.notes.presentation.common.states.TextFieldState
 import com.example.notes.presentation.login.events.LoginEvent
@@ -19,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userService: UserService,
+    private val appViewModel: AppViewModel
 ) : ViewModel() {
     // Handle username state
     private val _username = mutableStateOf(TextFieldState())
@@ -55,8 +58,8 @@ class LoginViewModel @Inject constructor(
                     )
                     if (user != null) {
                         if (user.password == event.password) {
-                            // TODO: Handle logged in state
-                            Log.i("Login:", "Successfully logged in to " + user.username)
+                            appViewModel.onEvent(AppEvent.LogUserIn(user))
+                            Log.i("Login:", "Successfully logged in to " + appViewModel.user.value.user)
                         }
                         else {
                             Log.i("Login:", "Failed to log in to " + user.username)

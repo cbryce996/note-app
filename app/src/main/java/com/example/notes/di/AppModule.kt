@@ -1,12 +1,16 @@
 package com.example.notes.di
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import androidx.room.Room
 import com.example.notes.application.note.NoteService
 import com.example.notes.application.user.UserService
+import com.example.notes.domain.user.User
 import com.example.notes.infrastructure.persistence.NoteDatabase
 import com.example.notes.infrastructure.repositories.NoteRepository
 import com.example.notes.infrastructure.repositories.UserRepository
+import com.example.notes.presentation.app.AppViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,10 +57,9 @@ class AppModule {
         return UserService(userRepository)
     }
 
-    // Provide global state
     @Provides
     @Singleton
-    fun provideGlobalState() {
-
+    fun provideAppViewModel(): AppViewModel {
+        return AppViewModel()
     }
 }

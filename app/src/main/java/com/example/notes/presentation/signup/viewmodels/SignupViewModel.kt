@@ -16,6 +16,8 @@ import javax.inject.Inject
 
 
 // TODO: Make generic form component with validation
+// TODO: Refactor states into one state object for each screen?
+// TODO: Sanitize input
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     private val userService: UserService
