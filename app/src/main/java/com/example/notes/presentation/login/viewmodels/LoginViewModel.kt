@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userService: UserService,
+    private val userService: UserService
 ) : ViewModel() {
     private val _username = mutableStateOf(TextFieldState())
     val username: State<TextFieldState> = _username

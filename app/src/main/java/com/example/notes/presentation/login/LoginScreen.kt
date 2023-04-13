@@ -69,7 +69,7 @@ fun LoginScreen (
                             Text(text = "Username:")
                         },
                         placeholder = {
-                            Text(text = "Please enter your username")
+                            Text(text = "Enter your username")
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             disabledTextColor = Color.Transparent,
@@ -91,7 +91,7 @@ fun LoginScreen (
                             Text(text = "Password:")
                         },
                         placeholder = {
-                            Text(text = "Please enter your password")
+                            Text(text = "Enter your password")
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             disabledTextColor = Color.Transparent,
