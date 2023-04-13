@@ -4,11 +4,14 @@ import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.notes.application.user.UserService
 import com.example.notes.presentation.common.states.TextFieldState
 import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.presentation.common.states.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -67,6 +70,11 @@ class SignupViewModel @Inject constructor(
                 )
                 validatePassword()
             }
+            is SignupEvent.SubmitSignUpButton -> {
+                viewModelScope.launch {
+                    userService.createUser(event.user)
+                }
+            }
         }
     }
 
@@ -101,7 +109,7 @@ class SignupViewModel @Inject constructor(
         if (_password.value != _passwordReType.value) {
             _passwordError.value = passwordError.value.copy(
                 isError = true,
-                errorMessage = "Passwords do not match"
+                errorMessage = "Passwords must match"
             )
         } else if (_password.value.text.length < 10) {
             _passwordError.value = passwordError.value.copy(

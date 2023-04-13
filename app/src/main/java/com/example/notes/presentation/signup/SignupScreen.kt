@@ -13,10 +13,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notes.domain.note.Note
+import com.example.notes.domain.user.User
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.login.viewmodels.SignupViewModel
 import com.example.notes.presentation.signup.events.SignupEvent
+import com.example.notes.presentation.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -219,7 +222,16 @@ fun SignupScreen (
                     Spacer(modifier = Modifier.size(16.dp))
                     Row {
                         Button(
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                viewModel.onEvent(SignupEvent.SubmitSignUpButton(
+                                    User (
+                                        username = usernameState.text,
+                                        email = usernameState.text,
+                                        password = passwordState.text
+                                    )
+                                ))
+                                navController.navigate(Screen.NotesScreen.route)
+                            }
                         ) {
                             Text(
                                 text = "Sign Up"

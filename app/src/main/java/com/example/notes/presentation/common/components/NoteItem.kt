@@ -20,7 +20,7 @@ import com.example.notes.domain.note.Note
 fun NoteItem (
     note: Note,
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 10.dp,
+    cornerRadius: Dp = 5.dp,
     onDeleteClick: () -> Unit,
     onNoteClick: () -> Unit
 ) {

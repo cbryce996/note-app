@@ -14,4 +14,7 @@ class UserRepository @Inject constructor(private val userDao: UserDAO) : IUserRe
         userDao.deleteUser(user)
     override suspend fun getUserById(id: Long): User? =
         userDao.getUserById(id)
+
+    override suspend fun getUserByUsername(username: String): User? =
+        userDao.getUserByUsername(username)
 }

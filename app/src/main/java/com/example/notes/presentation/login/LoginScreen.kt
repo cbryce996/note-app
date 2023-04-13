@@ -1,11 +1,14 @@
 package com.example.notes.presentation.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,6 +17,7 @@ import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.login.events.LoginEvent
 import com.example.notes.presentation.login.viewmodels.LoginViewModel
+import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.presentation.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,8 +26,13 @@ fun LoginScreen (
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    // Handle username sate
     val usernameState = viewModel.username.value
+    val usernameErrorState = viewModel.usernameError.value
+
+    // Handle password state
     val passwordState = viewModel.password.value
+    val passwordErrorState = viewModel.passwordError.value
 
     Scaffold (topBar = {
         TopBar(
@@ -61,7 +70,21 @@ fun LoginScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = usernameState.text?: "Please enter your username",
+                        value = usernameState.text,
+                        isError = usernameErrorState.isError,
+                        supportingText = {
+                            if (usernameErrorState.isError) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = usernameErrorState.errorMessage,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        },
+                        trailingIcon = {
+                            if (usernameErrorState.isError)
+                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
+                        },
                         onValueChange = {
                             viewModel.onEvent(LoginEvent.EnteredUsername(it))
                         },
@@ -79,13 +102,28 @@ fun LoginScreen (
                             disabledIndicatorColor = Color.Transparent
                         )
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(modifier = Modifier.size(3.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
                         value = passwordState.text,
+                        isError = passwordErrorState.isError,
+                        trailingIcon = {
+                            if (passwordErrorState.isError)
+                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
+                        },
                         onValueChange = {
                             viewModel.onEvent(LoginEvent.EnteredPassword(it))
+                        },
+                        visualTransformation = PasswordVisualTransformation(),
+                        supportingText = {
+                            if (passwordErrorState.isError) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = passwordErrorState.errorMessage,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         },
                         label = {
                             Text(text = "Password:")
@@ -104,7 +142,12 @@ fun LoginScreen (
                     Spacer(modifier = Modifier.size(16.dp))
                     Row {
                         Button(
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                viewModel.onEvent(LoginEvent.LoginSubmitButton(
+                                    username = usernameState.text,
+                                    password = passwordState.text
+                                ))
+                            }
                         ) {
                             Text(
                                 text = "Log In"

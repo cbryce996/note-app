@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.notes.presentation.components.*
+import com.example.notes.presentation.screens.AccountScreen
 import com.example.notes.presentation.screens.LoginScreen
 import com.example.notes.presentation.screens.SignupScreen
 import com.example.notes.presentation.util.Screen
@@ -32,8 +33,14 @@ class MainActivity() : ComponentActivity() {
                         navController = navController,
                         startDestination = Screen.NotesScreen.route
                     ) {
+                        // Defines navigation routes
                         composable(route = Screen.NotesScreen.route) {
                             NotesScreen(
+                                navController = navController
+                            )
+                        }
+                        composable(route = Screen.AccountScreen.route) {
+                            AccountScreen(
                                 navController = navController
                             )
                         }

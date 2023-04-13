@@ -8,4 +8,5 @@ interface IUserRepository {
     suspend fun insertUser(user: User)
     suspend fun deleteUser(user: User)
     suspend fun getUserById(id: Long): User?
+    suspend fun getUserByUsername(username: String): User?
 }
