@@ -15,6 +15,8 @@ import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.account.viewmodels.AccountViewModel
 import com.example.notes.presentation.app.AppViewModel
+import com.example.notes.presentation.app.events.AppEvent
+import com.example.notes.presentation.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +58,7 @@ fun AccountScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = "Username",
+                        value = appViewModel.user.value.user?.username ?: "Not found",
                         onValueChange = {
                         },
                         readOnly = true,
@@ -75,7 +77,7 @@ fun AccountScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = "Password",
+                        value = appViewModel.user.value.user?.password ?: "Not found",
                         onValueChange = {
                         },
                         readOnly = true,
@@ -94,7 +96,7 @@ fun AccountScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = "Email",
+                        value = appViewModel.user.value.user?.email ?: "Not found",
                         onValueChange = {
                         },
                         readOnly = true,
@@ -109,6 +111,17 @@ fun AccountScreen(
                             disabledIndicatorColor = Color.Transparent
                         )
                     )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Button(
+                        onClick = {
+                            appViewModel.onEvent(AppEvent.LogUserOut())
+                            navController.navigate(Screen.LoginScreen.route)
+                        }
+                    ) {
+                        Text(
+                            text = "Sign Out"
+                        )
+                    }
                 }
             )
         }

@@ -23,6 +23,8 @@ import com.example.notes.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+
+// Singleton which represents muteable state across the application, should be injected
 @AndroidEntryPoint
 class MainActivity() : ComponentActivity() {
     @Inject

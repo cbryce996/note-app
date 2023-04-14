@@ -21,6 +21,7 @@ import com.example.notes.presentation.login.viewmodels.LoginViewModel
 import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.presentation.util.Screen
 
+// TODO: Handle nav in viewmodels
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen (
@@ -152,6 +153,7 @@ fun LoginScreen (
                                     username = usernameState.text,
                                     password = passwordState.text
                                 ))
+                                navController.navigate(Screen.NotesScreen.route)
                             }
                         ) {
                             Text(

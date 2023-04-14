@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notes.application.user.UserService
+import com.example.notes.application.util.Resource
 import com.example.notes.domain.user.User
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.app.events.AppEvent
@@ -51,18 +52,22 @@ class LoginViewModel @Inject constructor(
                 )
                 validatePassword()
             }
+            // TODO: Make login case insensitive
+            // TODO: Hash password
+            // TODO: Move auth to service layer
             is LoginEvent.LoginSubmitButton -> {
                 viewModelScope.launch {
-                    val user: User? = userService.getUserByUsername(
-                        event.username
+                    var result = userService.loginUser(
+                        event.username,
+                        event.password
                     )
-                    if (user != null) {
-                        if (user.password == event.password) {
-                            appViewModel.onEvent(AppEvent.LogUserIn(user))
-                            Log.i("Login:", "Successfully logged in to " + appViewModel.user.value.user)
+                    when (result) {
+                        is Resource.Success -> {
+                            appViewModel.onEvent(AppEvent.LogUserIn(result.data))
+                            Log.i("Login:", "Successfully logged " + result.data + " in")
                         }
-                        else {
-                            Log.i("Login:", "Failed to log in to " + user.username)
+                        is Resource.Error -> {
+
                         }
                     }
                 }

@@ -29,7 +29,7 @@ fun SignupScreen (
     appViewModel: AppViewModel,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
-    // HandleUsernameState
+    // Handle Username State
     val usernameState = viewModel.username.value
     val usernameErrorSate = viewModel.usernameError.value
 
@@ -231,7 +231,7 @@ fun SignupScreen (
                                 viewModel.onEvent(SignupEvent.SubmitSignUpButton(
                                     User (
                                         username = usernameState.text,
-                                        email = usernameState.text,
+                                        email = emailState.text,
                                         password = passwordState.text
                                     )
                                 ))

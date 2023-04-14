@@ -3,6 +3,7 @@ package com.example.notes.presentation.app
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.notes.domain.user.User
 import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.app.states.LoggedInState
 import com.example.notes.presentation.app.states.UserState
