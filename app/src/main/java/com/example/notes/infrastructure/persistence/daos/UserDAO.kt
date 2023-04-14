@@ -10,6 +10,8 @@ interface UserDAO {
     suspend fun getUserById(id: Long): User?
     @Query("SELECT * FROM user WHERE username = :username")
     suspend fun getUserByUsername(username: String): User?
+    @Query("SELECT * FROM user WHERE email = :email")
+    suspend fun getUserByEmail(email: String): User?
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User)
     @Delete

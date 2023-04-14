@@ -29,6 +29,9 @@ fun LoginScreen (
     appViewModel: AppViewModel,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    // Handle login state
+    val loginErrorState = viewModel.loginError.value
+
     // Handle username sate
     val usernameState = viewModel.username.value
     val usernameErrorState = viewModel.usernameError.value
@@ -72,7 +75,17 @@ fun LoginScreen (
                         text = "To access and sync your notes across devices, please log in.",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
+                    if (loginErrorState.isError) {
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            modifier = Modifier.width(250.dp),
+                            text = loginErrorState.errorMessage,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(8.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
@@ -87,10 +100,12 @@ fun LoginScreen (
                                 )
                             }
                         },
-                        trailingIcon = {
-                            if (usernameErrorState.isError)
-                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
-                        },
+                        /*
+                         trailingIcon = {
+                             if (passwordErrorState.isError)
+                                 Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
+                         },
+                         */
                         onValueChange = {
                             viewModel.onEvent(LoginEvent.EnteredUsername(it))
                         },
@@ -114,10 +129,12 @@ fun LoginScreen (
                         maxLines = 30,
                         value = passwordState.text,
                         isError = passwordErrorState.isError,
+                        /*
                         trailingIcon = {
                             if (passwordErrorState.isError)
                                 Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
                         },
+                        */
                         onValueChange = {
                             viewModel.onEvent(LoginEvent.EnteredPassword(it))
                         },
@@ -153,7 +170,6 @@ fun LoginScreen (
                                     username = usernameState.text,
                                     password = passwordState.text
                                 ))
-                                navController.navigate(Screen.NotesScreen.route)
                             }
                         ) {
                             Text(

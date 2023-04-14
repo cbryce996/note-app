@@ -114,8 +114,8 @@ fun AccountScreen(
                     Spacer(modifier = Modifier.size(16.dp))
                     Button(
                         onClick = {
-                            appViewModel.onEvent(AppEvent.LogUserOut())
                             navController.navigate(Screen.LoginScreen.route)
+                            appViewModel.onEvent(AppEvent.LogUserOut())
                         }
                     ) {
                         Text(

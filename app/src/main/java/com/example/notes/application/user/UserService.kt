@@ -1,16 +1,14 @@
 package com.example.notes.application.user
 
-import android.util.Log
-import com.example.notes.application.util.Resource
+import com.example.notes.util.Resource
 import com.example.notes.domain.user.User
 import com.example.notes.infrastructure.repositories.UserRepository
-import com.example.notes.presentation.app.events.AppEvent
 import javax.inject.Inject
 
 // Represents use cases related to the user
 class UserService @Inject constructor(private val userRepository: UserRepository) {
     suspend fun loginUser(username: String, password: String): Resource<User> {
-        val user: User? = userRepository.getUserByUsername(
+        val user = userRepository.getUserByUsername(
             username
         )
         if (user != null) {
@@ -19,23 +17,29 @@ class UserService @Inject constructor(private val userRepository: UserRepository
             }
             else {
                 return Resource.Error<User>(
-                    message = "Incorrect password"
+                    message = "Incorrect password, please try again"
                 )
             }
         }
         return Resource.Error<User>(
-            message = "User not found"
+            message = "Account not found, please try again."
         )
     }
 
-    suspend fun getUserByUsername(username: String): User? {
-        return userRepository.getUserByUsername(username)
-    }
-    suspend fun getUserById(id: Long) : User? {
-        return userRepository.getUserById(id)
-    }
-    // TODO: Don't use insert for create, overwrites entry
-    suspend fun createUser(user: User) {
-        return userRepository.insertUser(user)
+    suspend fun signupUser(user: User): Resource<User> {
+        if (userRepository.getUserByUsername(user.username) != null) {
+            return Resource.Error<User>(
+                message = "Account with that username already exists"
+            )
+        } else if (userRepository.getUserByEmail(user.email) != null){
+            return Resource.Error<User>(
+                message = "Account with that e-mail already exists"
+            )
+        } else {
+            userRepository.insertUser(user)
+            return Resource.Success<User>(
+                data = user
+            )
+        }
     }
 }

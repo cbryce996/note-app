@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.notes.application.user.UserService
+import com.example.notes.presentation.app.AppViewModel
+import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.common.states.TextFieldState
 import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.presentation.common.states.ErrorState
+import com.example.notes.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +23,13 @@ import javax.inject.Inject
 // TODO: Sanitize input
 @HiltViewModel
 class SignupViewModel @Inject constructor(
-    private val userService: UserService
+    private val userService: UserService,
+    private val appViewModel: AppViewModel
 ) : ViewModel() {
+    // Handle signup error state
+    private val _signupError = mutableStateOf(ErrorState())
+    val signupError: State<ErrorState> = _signupError
+
     // Handle username state
     private val _username = mutableStateOf(TextFieldState())
     val username: State<TextFieldState> = _username
@@ -74,7 +82,30 @@ class SignupViewModel @Inject constructor(
             }
             is SignupEvent.SubmitSignUpButton -> {
                 viewModelScope.launch {
-                    userService.createUser(event.user)
+                    validateUsername()
+                    validateEmail()
+                    validatePassword()
+                    if (
+                        !_usernameError.value.isError &&
+                        !_passwordError.value.isError &&
+                        !_emailError.value.isError
+                    ) {
+                        var result = userService.signupUser(
+                            event.user
+                        )
+
+                        when (result) {
+                            is Resource.Success -> {
+                                appViewModel.onEvent(AppEvent.LogUserIn(result.data))
+                            }
+                            is Resource.Error -> {
+                                _signupError.value = signupError.value.copy(
+                                    isError = true,
+                                    errorMessage = result.message ?: "Undefined error, try again"
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

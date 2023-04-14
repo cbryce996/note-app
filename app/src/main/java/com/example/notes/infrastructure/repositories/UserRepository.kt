@@ -3,6 +3,7 @@ package com.example.notes.infrastructure.repositories
 import com.example.notes.application.interfaces.repositories.IUserRepository
 import com.example.notes.domain.user.User
 import com.example.notes.infrastructure.persistence.daos.UserDAO
+import com.example.notes.util.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +15,8 @@ class UserRepository @Inject constructor(private val userDao: UserDAO) : IUserRe
         userDao.deleteUser(user)
     override suspend fun getUserById(id: Long): User? =
         userDao.getUserById(id)
-
     override suspend fun getUserByUsername(username: String): User? =
         userDao.getUserByUsername(username)
+    override suspend fun getUserByEmail(email: String): User? =
+        userDao.getUserByEmail(email)
 }

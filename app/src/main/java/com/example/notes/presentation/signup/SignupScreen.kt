@@ -29,7 +29,10 @@ fun SignupScreen (
     appViewModel: AppViewModel,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
-    // Handle Username State
+    // Handle signup error state
+    val signupErrorState = viewModel.signupError.value
+
+    // Handle username state
     val usernameState = viewModel.username.value
     val usernameErrorSate = viewModel.usernameError.value
 
@@ -78,7 +81,17 @@ fun SignupScreen (
                         text = "Please enter your details to sign up for a new account.",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
+                    if (signupErrorState.isError) {
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            modifier = Modifier.width(250.dp),
+                            text = signupErrorState.errorMessage,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(8.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
@@ -93,10 +106,12 @@ fun SignupScreen (
                                 )
                             }
                         },
+                        /*
                         trailingIcon = {
-                            if (usernameErrorSate.isError)
+                            if (passwordErrorState.isError)
                                 Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
                         },
+                        */
                         onValueChange = {
                             viewModel.onEvent(SignupEvent.EnteredUsername(it))
                         },
@@ -132,10 +147,12 @@ fun SignupScreen (
                                 )
                             }
                         },
+                        /*
                         trailingIcon = {
-                            if (emailErrorState.isError)
+                            if (passwordErrorState.isError)
                                 Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
                         },
+                        */
                         label = {
                             Text(text = "Email:")
                         },
@@ -156,10 +173,12 @@ fun SignupScreen (
                         maxLines = 30,
                         value = passwordState.text,
                         isError = passwordErrorState.isError,
+                        /*
                         trailingIcon = {
                             if (passwordErrorState.isError)
                                 Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
                         },
+                        */
                         onValueChange = {
                             viewModel.onEvent(SignupEvent.EnteredPassword(it))
                         },
@@ -197,10 +216,12 @@ fun SignupScreen (
                         },
                         visualTransformation = PasswordVisualTransformation(),
                         isError = passwordErrorState.isError,
+                        /*
                         trailingIcon = {
                             if (passwordErrorState.isError)
                                 Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
                         },
+                        */
                         supportingText = {
                             if (passwordErrorState.isError) {
                                 Text(
@@ -235,7 +256,6 @@ fun SignupScreen (
                                         password = passwordState.text
                                     )
                                 ))
-                                navController.navigate(Screen.NotesScreen.route)
                             }
                         ) {
                             Text(

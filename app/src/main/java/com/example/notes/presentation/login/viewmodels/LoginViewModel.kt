@@ -1,15 +1,12 @@
 package com.example.notes.presentation.login.viewmodels
 
 import android.util.Log
-import androidx.compose.material.Text
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notes.application.user.UserService
-import com.example.notes.application.util.Resource
-import com.example.notes.domain.user.User
+import com.example.notes.util.Resource
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.common.states.ErrorState
@@ -24,6 +21,10 @@ class LoginViewModel @Inject constructor(
     private val userService: UserService,
     private val appViewModel: AppViewModel
 ) : ViewModel() {
+    // Handle login state
+    private val _loginError = mutableStateOf(ErrorState())
+    val loginError: State<ErrorState> = _loginError
+
     // Handle username state
     private val _username = mutableStateOf(TextFieldState())
     val username: State<TextFieldState> = _username
@@ -56,18 +57,24 @@ class LoginViewModel @Inject constructor(
             // TODO: Hash password
             // TODO: Move auth to service layer
             is LoginEvent.LoginSubmitButton -> {
-                viewModelScope.launch {
-                    var result = userService.loginUser(
-                        event.username,
-                        event.password
-                    )
-                    when (result) {
-                        is Resource.Success -> {
-                            appViewModel.onEvent(AppEvent.LogUserIn(result.data))
-                            Log.i("Login:", "Successfully logged " + result.data + " in")
-                        }
-                        is Resource.Error -> {
-
+                validateUsername()
+                validatePassword()
+                if (!_usernameError.value.isError && !_passwordError.value.isError) {
+                    viewModelScope.launch {
+                        var result = userService.loginUser(
+                            event.username,
+                            event.password
+                        )
+                        when (result) {
+                            is Resource.Success -> {
+                                appViewModel.onEvent(AppEvent.LogUserIn(result.data))
+                            }
+                            is Resource.Error -> {
+                                _loginError.value = loginError.value.copy(
+                                    isError = true,
+                                    errorMessage = result.message ?: "Undefined error, try again"
+                                )
+                            }
                         }
                     }
                 }
