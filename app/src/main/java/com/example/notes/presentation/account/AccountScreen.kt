@@ -13,7 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
-import com.example.notes.presentation.account.viewmodels.AccountViewModel
+import com.example.notes.presentation.account.AccountViewModel
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.util.Screen

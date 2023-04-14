@@ -1,4 +1,4 @@
-package com.example.notes.presentation.notes.viewmodels
+package com.example.notes.presentation.notes
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -17,9 +17,9 @@ class NotesViewModel @Inject constructor(
     private val noteService: NoteService
 ) : ViewModel() {
 
-    // State for notes view model
-    private val _state = mutableStateOf(NotesState())
-    val state: State<NotesState> = _state
+    // Variables for handling notes
+    private val _notes = mutableStateOf(NotesState())
+    val notes: State<NotesState> = _notes
 
     private var getNotesJob: Job? = null
 
@@ -27,7 +27,6 @@ class NotesViewModel @Inject constructor(
         getNotes()
     }
 
-    // Function to be called from UI when event takes place
     fun onEvent(event: NotesEvent) {
         when(event) {
             is NotesEvent.CreateNote -> {
@@ -54,7 +53,7 @@ class NotesViewModel @Inject constructor(
         getNotesJob = viewModelScope.launch {
             noteService.getNotes()
                 .collect { notes ->
-                    _state.value = state.value.copy(
+                    _notes.value = this@NotesViewModel.notes.value.copy(
                         notes = notes
                     )
                 }

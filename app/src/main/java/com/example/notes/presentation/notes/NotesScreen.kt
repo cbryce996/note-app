@@ -18,7 +18,7 @@ import com.example.notes.presentation.common.components.NoteItem
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.notes.events.NotesEvent
 import com.example.notes.presentation.util.Screen
-import com.example.notes.presentation.notes.viewmodels.NotesViewModel
+import com.example.notes.presentation.notes.NotesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,7 +27,8 @@ fun NotesScreen(
     appViewModel: AppViewModel,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    // Variables for notes
+    val notes = viewModel.notes.value
 
     Scaffold(
         topBar = {
@@ -65,7 +66,7 @@ fun NotesScreen(
                     LazyColumn(modifier = Modifier
                         .fillMaxSize(),
                         content = {
-                            items(state.notes) { note ->
+                            items(notes.notes) { note ->
                                 NoteItem(
                                     note = note,
                                     modifier = Modifier

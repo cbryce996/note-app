@@ -1,4 +1,4 @@
-package com.example.notes.presentation.login.viewmodels
+package com.example.notes.presentation.login
 
 import android.util.Log
 import androidx.compose.runtime.State
@@ -21,18 +21,19 @@ class LoginViewModel @Inject constructor(
     private val userService: UserService,
     private val appViewModel: AppViewModel
 ) : ViewModel() {
-    // Handle login state
+
+    // Variables for handling  login
     private val _loginError = mutableStateOf(ErrorState())
     val loginError: State<ErrorState> = _loginError
 
-    // Handle username state
+    // Variables for handling  username
     private val _username = mutableStateOf(TextFieldState())
     val username: State<TextFieldState> = _username
 
     private val _usernameError = mutableStateOf(ErrorState())
     val usernameError: State<ErrorState> = _usernameError
 
-    // Handle password state
+    // Variables for handling  password
     private val _password = mutableStateOf(TextFieldState())
     val password: State<TextFieldState> = _password
 

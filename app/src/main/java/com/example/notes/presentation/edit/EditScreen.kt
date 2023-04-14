@@ -16,7 +16,7 @@ import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.edit.events.EditEvent
 import com.example.notes.presentation.util.Screen
-import com.example.notes.presentation.edit.viewmodels.EditViewModel
+import com.example.notes.presentation.edit.EditViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

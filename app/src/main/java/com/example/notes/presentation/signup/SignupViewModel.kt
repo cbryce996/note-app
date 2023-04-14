@@ -1,4 +1,4 @@
-package com.example.notes.presentation.login.viewmodels
+package com.example.notes.presentation.signup
 
 import android.util.Patterns
 import androidx.compose.runtime.State
@@ -26,25 +26,25 @@ class SignupViewModel @Inject constructor(
     private val userService: UserService,
     private val appViewModel: AppViewModel
 ) : ViewModel() {
-    // Handle signup error state
+    // Variables for handling signup error
     private val _signupError = mutableStateOf(ErrorState())
     val signupError: State<ErrorState> = _signupError
 
-    // Handle username state
+    // Variables for handling username
     private val _username = mutableStateOf(TextFieldState())
     val username: State<TextFieldState> = _username
 
     private val _usernameError = mutableStateOf(ErrorState())
     val usernameError: State<ErrorState> = _usernameError
 
-    // Handle email state
+    // Variables for handling email
     private val _email = mutableStateOf(TextFieldState())
     val email: State<TextFieldState> = _email
 
     private val _emailError = mutableStateOf(ErrorState())
     val emailError: State<ErrorState> = _emailError
 
-    // Handle password state
+    // Variables for handling password
     private val _password = mutableStateOf(TextFieldState())
     val password: State<TextFieldState> = _password
 

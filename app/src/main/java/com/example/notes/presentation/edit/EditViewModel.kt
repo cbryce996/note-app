@@ -1,4 +1,4 @@
-package com.example.notes.presentation.edit.viewmodels
+package com.example.notes.presentation.edit
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

@@ -1,8 +1,6 @@
 package com.example.notes.presentation.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,14 +11,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.notes.domain.note.Note
 import com.example.notes.domain.user.User
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
-import com.example.notes.presentation.login.viewmodels.SignupViewModel
+import com.example.notes.presentation.signup.SignupViewModel
 import com.example.notes.presentation.signup.events.SignupEvent
-import com.example.notes.presentation.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,21 +25,21 @@ fun SignupScreen (
     appViewModel: AppViewModel,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
-    // Handle signup error state
-    val signupErrorState = viewModel.signupError.value
+    // Variables for signup error
+    val signupError = viewModel.signupError.value
 
-    // Handle username state
-    val usernameState = viewModel.username.value
-    val usernameErrorSate = viewModel.usernameError.value
+    // Variables for username
+    val username = viewModel.username.value
+    val usernameError = viewModel.usernameError.value
 
-    // Handle password state
-    val emailState = viewModel.email.value
-    val emailErrorState = viewModel.emailError.value
+    // Variables for password
+    val email = viewModel.email.value
+    val emailError = viewModel.emailError.value
 
-    // Handle password state
-    val passwordState = viewModel.password.value
-    val passwordReTypeState = viewModel.passwordReType.value
-    val passwordErrorState = viewModel.passwordError.value
+    // Variables for password
+    val password = viewModel.password.value
+    val passwordReType = viewModel.passwordReType.value
+    val passwordError = viewModel.passwordError.value
 
     Scaffold (
         topBar = {
@@ -81,11 +77,11 @@ fun SignupScreen (
                         text = "Please enter your details to sign up for a new account.",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    if (signupErrorState.isError) {
+                    if (signupError.isError) {
                         Spacer(modifier = Modifier.size(8.dp))
                         Text(
                             modifier = Modifier.width(250.dp),
-                            text = signupErrorState.errorMessage,
+                            text = signupError.errorMessage,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall
@@ -95,13 +91,13 @@ fun SignupScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = usernameState.text,
-                        isError = usernameErrorSate.isError,
+                        value = username.text,
+                        isError = usernameError.isError,
                         supportingText = {
-                            if (usernameErrorSate.isError) {
+                            if (usernameError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = usernameErrorSate.errorMessage,
+                                    text = usernameError.errorMessage,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -129,20 +125,20 @@ fun SignupScreen (
                             disabledIndicatorColor = Color.Transparent
                         )
                     )
-                    Spacer(modifier = Modifier.size(3.dp))
+                    Spacer(modifier = Modifier.size(4.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = emailState.text,
+                        value = email.text,
                         onValueChange = {
                             viewModel.onEvent(SignupEvent.EnteredEmail(it))
                         },
-                        isError = emailErrorState.isError,
+                        isError = emailError.isError,
                         supportingText = {
-                            if (emailErrorState.isError) {
+                            if (emailError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = emailErrorState.errorMessage,
+                                    text = emailError.errorMessage,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -167,12 +163,12 @@ fun SignupScreen (
                             disabledIndicatorColor = Color.Transparent
                         )
                     )
-                    Spacer(modifier = Modifier.size(3.dp))
+                    Spacer(modifier = Modifier.size(4.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = passwordState.text,
-                        isError = passwordErrorState.isError,
+                        value = password.text,
+                        isError = passwordError.isError,
                         /*
                         trailingIcon = {
                             if (passwordErrorState.isError)
@@ -184,10 +180,10 @@ fun SignupScreen (
                         },
                         visualTransformation = PasswordVisualTransformation(),
                         supportingText = {
-                            if (passwordErrorState.isError) {
+                            if (passwordError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = passwordErrorState.errorMessage,
+                                    text = passwordError.errorMessage,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -206,16 +202,16 @@ fun SignupScreen (
                             disabledIndicatorColor = Color.Transparent
                         )
                     )
-                    Spacer(modifier = Modifier.size(3.dp))
+                    Spacer(modifier = Modifier.size(4.dp))
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = passwordReTypeState.text,
+                        value = passwordReType.text,
                         onValueChange = {
                             viewModel.onEvent(SignupEvent.EnteredPasswordReType(it))
                         },
                         visualTransformation = PasswordVisualTransformation(),
-                        isError = passwordErrorState.isError,
+                        isError = passwordError.isError,
                         /*
                         trailingIcon = {
                             if (passwordErrorState.isError)
@@ -223,10 +219,10 @@ fun SignupScreen (
                         },
                         */
                         supportingText = {
-                            if (passwordErrorState.isError) {
+                            if (passwordError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = passwordErrorState.errorMessage,
+                                    text = passwordError.errorMessage,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -251,9 +247,9 @@ fun SignupScreen (
                             onClick = {
                                 viewModel.onEvent(SignupEvent.SubmitSignUpButton(
                                     User (
-                                        username = usernameState.text,
-                                        email = emailState.text,
-                                        password = passwordState.text
+                                        username = username.text,
+                                        email = email.text,
+                                        password = password.text
                                     )
                                 ))
                             }
