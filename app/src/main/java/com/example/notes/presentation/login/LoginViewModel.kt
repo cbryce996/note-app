@@ -12,6 +12,8 @@ import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.common.states.ErrorState
 import com.example.notes.presentation.common.states.TextFieldState
 import com.example.notes.presentation.login.events.LoginEvent
+import com.example.notes.presentation.login.states.PasswordState
+import com.example.notes.presentation.login.states.UsernameState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,42 +24,64 @@ class LoginViewModel @Inject constructor(
     private val appViewModel: AppViewModel
 ) : ViewModel() {
 
-    // Variables for handling  login
-    private val _loginError = mutableStateOf(ErrorState())
-    val loginError: State<ErrorState> = _loginError
-
-    // Variables for handling  username
-    private val _username = mutableStateOf(TextFieldState())
-    val username: State<TextFieldState> = _username
-
-    private val _usernameError = mutableStateOf(ErrorState())
-    val usernameError: State<ErrorState> = _usernameError
-
-    // Variables for handling  password
-    private val _password = mutableStateOf(TextFieldState())
-    val password: State<TextFieldState> = _password
-
-    private val _passwordError = mutableStateOf(ErrorState())
-    val passwordError: State<ErrorState> = _passwordError
+    // Login screen state
+    private val _loginState = mutableStateOf(LoginState())
+    val loginState: State<LoginState> = _loginState
 
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.EnteredUsername -> {
-                _username.value = username.value.copy(
-                    text = event.value
+                _loginState.value = loginState.value.copy(
+                    usernameState = UsernameState(
+                        username = event.value,
+                        error = validateUsername()
+                    )
                 )
-                validateUsername()
             }
             is LoginEvent.EnteredPassword -> {
-                _password.value = password.value.copy(
-                    text = event.value
+                _loginState.value = loginState.value.copy(
+                    passwordState = PasswordState(
+                        password = event.value,
+                        error = validatePassword()
+                    )
                 )
-                validatePassword()
             }
-            // TODO: Make login case insensitive
-            // TODO: Hash password
-            // TODO: Move auth to service layer
+
             is LoginEvent.LoginSubmitButton -> {
+                if (!validatePassword().isError && !validatePassword().isError) {
+                    viewModelScope.launch {
+                        var result = userService.loginUser(
+                            username = event.username,
+                            password = event.password
+                        )
+                        when (result) {
+                            is Resource.Success -> {
+                                appViewModel.onEvent(AppEvent.LogUserIn(result.data))
+                                _loginState.value = loginState.value.copy(
+                                    authState = true
+                                )
+                            }
+                            is Resource.Error -> {
+                                _loginState.value = loginState.value.copy(
+                                    errorState = ErrorState(
+                                        isError = true,
+                                        message = result.message ?: "Undefined error, please try again"
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    _loginState.value = loginState.value.copy(
+                        usernameState = loginState.value.usernameState.copy(
+                            error = validateUsername()
+                        ),
+                        passwordState = loginState.value.passwordState.copy(
+                            error = validatePassword()
+                        )
+                    )
+                }
+                /*
                 validateUsername()
                 validatePassword()
                 if (!_usernameError.value.isError && !_passwordError.value.isError) {
@@ -79,33 +103,30 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                 }
+                */
             }
         }
     }
 
-    fun validateUsername() {
-        if (_username.value.text.length < 6) {
-            _usernameError.value = usernameError.value.copy(
+    fun validateUsername(): ErrorState {
+        if (_loginState.value.usernameState.username.length < 6) {
+            return ErrorState(
                 isError = true,
-                errorMessage = "Username must be at least 6 characters long"
+                message = "Username must be at least 6 characters"
             )
         } else {
-            _usernameError.value = usernameError.value.copy(
-                isError = false
-            )
+            return ErrorState()
         }
     }
 
-    fun validatePassword() {
-        if (_password.value.text.length < 10) {
-            _passwordError.value = passwordError.value.copy(
+    fun validatePassword(): ErrorState {
+        if (_loginState.value.passwordState.password.length < 10) {
+            return ErrorState(
                 isError = true,
-                errorMessage = "Password must be at least 10 characters"
+                message = "Passwrod must be at least 10 characters"
             )
         } else {
-            _passwordError.value = passwordError.value.copy(
-                isError = false
-            )
+            return ErrorState()
         }
     }
 }

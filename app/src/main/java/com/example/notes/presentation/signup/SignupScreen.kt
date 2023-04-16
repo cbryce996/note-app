@@ -81,7 +81,7 @@ fun SignupScreen (
                         Spacer(modifier = Modifier.size(8.dp))
                         Text(
                             modifier = Modifier.width(250.dp),
-                            text = signupError.errorMessage,
+                            text = signupError.message,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall
@@ -97,7 +97,7 @@ fun SignupScreen (
                             if (usernameError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = usernameError.errorMessage,
+                                    text = usernameError.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -138,7 +138,7 @@ fun SignupScreen (
                             if (emailError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = emailError.errorMessage,
+                                    text = emailError.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -183,7 +183,7 @@ fun SignupScreen (
                             if (passwordError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = passwordError.errorMessage,
+                                    text = passwordError.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -222,7 +222,7 @@ fun SignupScreen (
                             if (passwordError.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = passwordError.errorMessage,
+                                    text = passwordError.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }

@@ -101,7 +101,7 @@ class SignupViewModel @Inject constructor(
                             is Resource.Error -> {
                                 _signupError.value = signupError.value.copy(
                                     isError = true,
-                                    errorMessage = result.message ?: "Undefined error, try again"
+                                    message = result.message ?: "Undefined error, try again"
                                 )
                             }
                         }
@@ -115,7 +115,7 @@ class SignupViewModel @Inject constructor(
         if (_username.value.text.length < 6) {
             _usernameError.value = usernameError.value.copy(
                 isError = true,
-                errorMessage = "Username must be at least 6 characters long"
+                message = "Username must be at least 6 characters long"
             )
         } else {
             _usernameError.value = usernameError.value.copy(
@@ -128,7 +128,7 @@ class SignupViewModel @Inject constructor(
         if (!Patterns.EMAIL_ADDRESS.matcher(_email.value.text).matches()) {
             _emailError.value = emailError.value.copy(
                 isError = true,
-                errorMessage = "Please enter a valid E-Mail address"
+                message = "Please enter a valid E-Mail address"
             )
         }
         else {
@@ -142,12 +142,12 @@ class SignupViewModel @Inject constructor(
         if (_password.value != _passwordReType.value) {
             _passwordError.value = passwordError.value.copy(
                 isError = true,
-                errorMessage = "Passwords must match"
+                message = "Passwords must match"
             )
         } else if (_password.value.text.length < 10) {
             _passwordError.value = passwordError.value.copy(
                 isError = true,
-                errorMessage = "Password must be at least 10 characters"
+                message = "Password must be at least 10 characters"
             )
         } else {
             _passwordError.value = passwordError.value.copy(
