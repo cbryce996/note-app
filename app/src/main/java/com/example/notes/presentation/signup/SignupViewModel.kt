@@ -1,5 +1,6 @@
 package com.example.notes.presentation.signup
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,15 +8,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.notes.application.user.UserService
+import com.example.notes.domain.user.User
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.common.states.TextFieldState
 import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.presentation.common.states.ErrorState
+import com.example.notes.presentation.signup.states.EmailState
+import com.example.notes.presentation.signup.states.PasswordState
+import com.example.notes.presentation.signup.states.UsernameState
 import com.example.notes.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.sign
 
 
 // TODO: Make generic form component with validation
@@ -26,133 +32,131 @@ class SignupViewModel @Inject constructor(
     private val userService: UserService,
     private val appViewModel: AppViewModel
 ) : ViewModel() {
-    // Variables for handling signup error
-    private val _signupError = mutableStateOf(ErrorState())
-    val signupError: State<ErrorState> = _signupError
 
-    // Variables for handling username
-    private val _username = mutableStateOf(TextFieldState())
-    val username: State<TextFieldState> = _username
-
-    private val _usernameError = mutableStateOf(ErrorState())
-    val usernameError: State<ErrorState> = _usernameError
-
-    // Variables for handling email
-    private val _email = mutableStateOf(TextFieldState())
-    val email: State<TextFieldState> = _email
-
-    private val _emailError = mutableStateOf(ErrorState())
-    val emailError: State<ErrorState> = _emailError
-
-    // Variables for handling password
-    private val _password = mutableStateOf(TextFieldState())
-    val password: State<TextFieldState> = _password
-
-    private val _passwordReType = mutableStateOf(TextFieldState())
-    val passwordReType: State<TextFieldState> = _passwordReType
-
-    private val _passwordError = mutableStateOf(ErrorState())
-    val passwordError: State<ErrorState> = _passwordError
+    // Signup screen state
+    private val _signupState = mutableStateOf(SignupState())
+    val signupState: State<SignupState> = _signupState
 
     fun onEvent(event: SignupEvent) {
         when (event) {
             is SignupEvent.EnteredUsername -> {
-                _username.value = username.value.copy(
-                    text = event.value
+                _signupState.value = signupState.value.copy(
+                    usernameState = signupState.value.usernameState.copy(
+                        username = event.value
+                    )
                 )
-                validateUsername()
+                _signupState.value = signupState.value.copy(
+                    usernameState = signupState.value.usernameState.copy(
+                        error = validateUsername()
+                    )
+                )
             }
             is SignupEvent.EnteredEmail -> {
-                _email.value = email.value.copy(
-                    text = event.value
+                _signupState.value = signupState.value.copy(
+                    emailState = signupState.value.emailState.copy(
+                        email = event.value
+                    )
                 )
-                validateEmail()
+                _signupState.value = signupState.value.copy(
+                    emailState = signupState.value.emailState.copy(
+                        error = validateEmail()
+                    )
+                )
             }
             is SignupEvent.EnteredPassword -> {
-                _password.value = password.value.copy(
-                    text = event.value
+                _signupState.value = signupState.value.copy(
+                    passwordState = signupState.value.passwordState.copy(
+                        password = event.password,
+                        passwordReType = event.passwordReType
+                    )
                 )
-                validatePassword()
-            }
-            is SignupEvent.EnteredPasswordReType -> {
-                _passwordReType.value = passwordReType.value.copy(
-                    text = event.value
+                _signupState.value = signupState.value.copy(
+                    passwordState = signupState.value.passwordState.copy(
+                        error = validatePassword()
+                    )
                 )
-                validatePassword()
             }
             is SignupEvent.SubmitSignUpButton -> {
-                viewModelScope.launch {
-                    validateUsername()
-                    validateEmail()
-                    validatePassword()
-                    if (
-                        !_usernameError.value.isError &&
-                        !_passwordError.value.isError &&
-                        !_emailError.value.isError
-                    ) {
+                if (!validateUsername().isError &&
+                    !validateEmail().isError &&
+                    !validatePassword().isError) {
+                    viewModelScope.launch {
                         var result = userService.signupUser(
                             event.user
                         )
-
                         when (result) {
                             is Resource.Success -> {
                                 appViewModel.onEvent(AppEvent.LogUserIn(result.data))
+                                _signupState.value = signupState.value.copy(
+                                    authState = true
+                                )
                             }
                             is Resource.Error -> {
-                                _signupError.value = signupError.value.copy(
-                                    isError = true,
-                                    message = result.message ?: "Undefined error, try again"
+                                _signupState.value = signupState.value.copy(
+                                    errorState = ErrorState(
+                                        isError = true,
+                                        message = result.message ?: "Undefined error, please try again"
+                                    )
                                 )
                             }
                         }
                     }
+                } else {
+                    _signupState.value = signupState.value.copy(
+                        usernameState = signupState.value.usernameState.copy(
+                            error = validateUsername()
+                        ),
+                        emailState = signupState.value.emailState.copy(
+                            error = validateUsername()
+                        ),
+                        passwordState = signupState.value.passwordState.copy(
+                            error = validatePassword()
+                        )
+                    )
                 }
             }
         }
     }
 
-    fun validateUsername() {
-        if (_username.value.text.length < 6) {
-            _usernameError.value = usernameError.value.copy(
+    fun validateUsername(): ErrorState {
+        if (_signupState.value.usernameState.username.length < 6) {
+            return ErrorState(
                 isError = true,
-                message = "Username must be at least 6 characters long"
+                message = "Username must be at least 6 characters"
             )
         } else {
-            _usernameError.value = usernameError.value.copy(
-                isError = false
-            )
+            return ErrorState()
         }
     }
 
-    fun validateEmail() {
-        if (!Patterns.EMAIL_ADDRESS.matcher(_email.value.text).matches()) {
-            _emailError.value = emailError.value.copy(
+
+    fun validateEmail(): ErrorState {
+        if (!Patterns.EMAIL_ADDRESS.matcher(_signupState.value.emailState.email).matches()) {
+            return ErrorState(
                 isError = true,
                 message = "Please enter a valid E-Mail address"
             )
         }
         else {
-            _emailError.value = emailError.value.copy(
-                isError = false
-            )
+            return ErrorState()
         }
     }
 
-    fun validatePassword() {
-        if (_password.value != _passwordReType.value) {
-            _passwordError.value = passwordError.value.copy(
+    fun validatePassword(): ErrorState {
+        if (_signupState.value.passwordState.password !=
+            _signupState.value.passwordState.passwordReType) {
+            return ErrorState(
                 isError = true,
                 message = "Passwords must match"
             )
-        } else if (_password.value.text.length < 10) {
-            _passwordError.value = passwordError.value.copy(
+        } else if (_signupState.value.passwordState.password.length < 10
+            || _signupState.value.passwordState.passwordReType.length < 10) {
+            return ErrorState(
                 isError = true,
                 message = "Password must be at least 10 characters"
             )
         } else {
-            _passwordError.value = passwordError.value.copy(
-                isError = false
-            )
+            return ErrorState()
         }
     }
 }

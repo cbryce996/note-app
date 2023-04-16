@@ -3,6 +3,7 @@ package com.example.notes.presentation.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +18,7 @@ import com.example.notes.presentation.common.components.BottomBar
 import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.signup.SignupViewModel
 import com.example.notes.presentation.signup.events.SignupEvent
+import com.example.notes.presentation.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,22 +27,11 @@ fun SignupScreen (
     appViewModel: AppViewModel,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
-    // Variables for signup error
-    val signupError = viewModel.signupError.value
-
-    // Variables for username
-    val username = viewModel.username.value
-    val usernameError = viewModel.usernameError.value
-
-    // Variables for password
-    val email = viewModel.email.value
-    val emailError = viewModel.emailError.value
-
-    // Variables for password
-    val password = viewModel.password.value
-    val passwordReType = viewModel.passwordReType.value
-    val passwordError = viewModel.passwordError.value
-
+    LaunchedEffect(viewModel.signupState.value.authState) {
+        if (viewModel.signupState.value.authState) {
+            navController.navigate(Screen.AccountScreen.route)
+        }
+    }
     Scaffold (
         topBar = {
             TopBar(
@@ -77,11 +68,11 @@ fun SignupScreen (
                         text = "Please enter your details to sign up for a new account.",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    if (signupError.isError) {
+                    if (viewModel.signupState.value.errorState.isError) {
                         Spacer(modifier = Modifier.size(8.dp))
                         Text(
                             modifier = Modifier.width(250.dp),
-                            text = signupError.message,
+                            text = viewModel.signupState.value.errorState.message,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall
@@ -91,23 +82,17 @@ fun SignupScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = username.text,
-                        isError = usernameError.isError,
+                        value = viewModel.signupState.value.usernameState.username,
+                        isError = viewModel.signupState.value.usernameState.error.isError,
                         supportingText = {
-                            if (usernameError.isError) {
+                            if (viewModel.signupState.value.usernameState.error.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = usernameError.message,
+                                    text = viewModel.signupState.value.usernameState.error.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
                         },
-                        /*
-                        trailingIcon = {
-                            if (passwordErrorState.isError)
-                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
-                        },
-                        */
                         onValueChange = {
                             viewModel.onEvent(SignupEvent.EnteredUsername(it))
                         },
@@ -129,26 +114,20 @@ fun SignupScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = email.text,
+                        value = viewModel.signupState.value.emailState.email,
                         onValueChange = {
                             viewModel.onEvent(SignupEvent.EnteredEmail(it))
                         },
-                        isError = emailError.isError,
+                        isError = viewModel.signupState.value.emailState.error.isError,
                         supportingText = {
-                            if (emailError.isError) {
+                            if (viewModel.signupState.value.emailState.error.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = emailError.message,
+                                    text = viewModel.signupState.value.emailState.error.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
                         },
-                        /*
-                        trailingIcon = {
-                            if (passwordErrorState.isError)
-                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
-                        },
-                        */
                         label = {
                             Text(text = "Email:")
                         },
@@ -167,23 +146,17 @@ fun SignupScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = password.text,
-                        isError = passwordError.isError,
-                        /*
-                        trailingIcon = {
-                            if (passwordErrorState.isError)
-                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
-                        },
-                        */
+                        value = viewModel.signupState.value.passwordState.password,
+                        isError = viewModel.signupState.value.passwordState.error.isError,
                         onValueChange = {
-                            viewModel.onEvent(SignupEvent.EnteredPassword(it))
+                            viewModel.onEvent(SignupEvent.EnteredPassword(it, viewModel.signupState.value.passwordState.passwordReType))
                         },
                         visualTransformation = PasswordVisualTransformation(),
                         supportingText = {
-                            if (passwordError.isError) {
+                            if (viewModel.signupState.value.passwordState.error.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = passwordError.message,
+                                    text = viewModel.signupState.value.passwordState.error.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -206,23 +179,17 @@ fun SignupScreen (
                     TextField(
                         modifier = Modifier,
                         maxLines = 30,
-                        value = passwordReType.text,
+                        value = viewModel.signupState.value.passwordState.passwordReType,
                         onValueChange = {
-                            viewModel.onEvent(SignupEvent.EnteredPasswordReType(it))
+                            viewModel.onEvent(SignupEvent.EnteredPassword(viewModel.signupState.value.passwordState.password, it))
                         },
                         visualTransformation = PasswordVisualTransformation(),
-                        isError = passwordError.isError,
-                        /*
-                        trailingIcon = {
-                            if (passwordErrorState.isError)
-                                Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
-                        },
-                        */
+                        isError = viewModel.signupState.value.passwordState.error.isError,
                         supportingText = {
-                            if (passwordError.isError) {
+                            if (viewModel.signupState.value.passwordState.error.isError) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = passwordError.message,
+                                    text = viewModel.signupState.value.passwordState.error.message,
                                     color = MaterialTheme.colorScheme.error
                                 )
                             }
@@ -247,9 +214,9 @@ fun SignupScreen (
                             onClick = {
                                 viewModel.onEvent(SignupEvent.SubmitSignUpButton(
                                     User (
-                                        username = username.text,
-                                        email = email.text,
-                                        password = password.text
+                                        username = viewModel.signupState.value.usernameState.username,
+                                        email = viewModel.signupState.value.emailState.email,
+                                        password = viewModel.signupState.value.passwordState.password
                                     )
                                 ))
                             }

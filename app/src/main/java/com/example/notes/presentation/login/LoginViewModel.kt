@@ -32,16 +32,24 @@ class LoginViewModel @Inject constructor(
         when (event) {
             is LoginEvent.EnteredUsername -> {
                 _loginState.value = loginState.value.copy(
-                    usernameState = UsernameState(
-                        username = event.value,
+                    usernameState = loginState.value.usernameState.copy(
+                        username = event.value
+                    )
+                )
+                _loginState.value = loginState.value.copy(
+                    usernameState = loginState.value.usernameState.copy(
                         error = validateUsername()
                     )
                 )
             }
             is LoginEvent.EnteredPassword -> {
                 _loginState.value = loginState.value.copy(
-                    passwordState = PasswordState(
-                        password = event.value,
+                    passwordState = loginState.value.passwordState.copy(
+                        password = event.value
+                    )
+                )
+                _loginState.value = loginState.value.copy(
+                    passwordState = loginState.value.passwordState.copy(
                         error = validatePassword()
                     )
                 )
@@ -81,29 +89,6 @@ class LoginViewModel @Inject constructor(
                         )
                     )
                 }
-                /*
-                validateUsername()
-                validatePassword()
-                if (!_usernameError.value.isError && !_passwordError.value.isError) {
-                    viewModelScope.launch {
-                        var result = userService.loginUser(
-                            event.username,
-                            event.password
-                        )
-                        when (result) {
-                            is Resource.Success -> {
-                                appViewModel.onEvent(AppEvent.LogUserIn(result.data))
-                            }
-                            is Resource.Error -> {
-                                _loginError.value = loginError.value.copy(
-                                    isError = true,
-                                    errorMessage = result.message ?: "Undefined error, try again"
-                                )
-                            }
-                        }
-                    }
-                }
-                */
             }
         }
     }
@@ -123,7 +108,7 @@ class LoginViewModel @Inject constructor(
         if (_loginState.value.passwordState.password.length < 10) {
             return ErrorState(
                 isError = true,
-                message = "Passwrod must be at least 10 characters"
+                message = "Password must be at least 10 characters"
             )
         } else {
             return ErrorState()
