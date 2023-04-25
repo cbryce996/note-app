@@ -6,9 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notes.application.note.NoteService
+import com.example.notes.domain.location.Location
 import com.example.notes.domain.note.Note
+import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.edit.events.EditEvent
-import com.example.notes.presentation.common.states.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,55 +17,45 @@ import javax.inject.Inject
 @HiltViewModel
 class EditViewModel @Inject constructor(
     private val noteService: NoteService,
+    private val appViewModel: AppViewModel,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    // State for notes view model
-    private val _noteTitle = mutableStateOf(TextFieldState())
-    val noteTitle: State<TextFieldState> = _noteTitle
-
-    // State for notes view model
-    private val _noteContent = mutableStateOf(TextFieldState())
-    val noteContent: State<TextFieldState> = _noteContent
-
-    private var currentNoteId: Long? = null
+    private val _editState = mutableStateOf(EditState())
+    val editState: State<EditState> = _editState
 
     init {
-        savedStateHandle.get<Long>("noteId")?.let { noteId ->
-            if (noteId != null) {
-                viewModelScope.launch {
-                    noteService.getNoteById(noteId)?. also { note ->
-                        currentNoteId = note.id
-                        _noteTitle.value = noteTitle.value.copy(
-                            text = note.title
-                        )
-                        _noteContent.value = noteContent.value.copy(
-                            text = note.content
-                        )
-                    }
-                }
-            }
-        }
+        _editState.value = editState.value.copy(
+            titleState = appViewModel.note.value.note?.title ?: "",
+            contentState = appViewModel.note.value.note?.content ?: "",
+            mapState = appViewModel.note.value.note?.location != null
+        )
     }
 
     fun onEvent(event: EditEvent) {
         when (event) {
             is EditEvent.EnteredTitle -> {
-                _noteTitle.value = noteTitle.value.copy(
-                    text = event.value
+                _editState.value = editState.value.copy(
+                    titleState = event.value
                 )
             }
             is EditEvent.EnteredContent -> {
-                _noteContent.value = noteContent.value.copy(
-                    text = event.value
+                _editState.value = editState.value.copy(
+                    contentState = event.value
+                )
+            }
+            is EditEvent.ToggledLocation -> {
+                _editState.value = editState.value.copy(
+                    mapState = event.value
                 )
             }
             is EditEvent.SaveNote -> {
                 viewModelScope.launch {
                     noteService.createNote(
                         Note(
-                            title = noteTitle.value.text,
-                            content = noteContent.value.text,
-                            id = currentNoteId
+                            title = event.value.title,
+                            content = event.value.content,
+                            location = event.value.location,
+                            id = appViewModel.note.value.note?.id
                         )
                     )
                 }

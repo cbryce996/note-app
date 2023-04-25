@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -17,6 +18,12 @@ import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.edit.events.EditEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.edit.EditViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,8 +32,14 @@ fun AddEditScreen (
     appViewModel: AppViewModel,
     viewModel: EditViewModel = hiltViewModel(),
 ) {
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(
+            LatLng(
+                viewModel.editState.value.locationState?.latitude ?: 0.0,
+                viewModel.editState.value.locationState?.longitude ?: 0.0
+            ),
+        1f)
+    }
 
     Scaffold(
         topBar = {
@@ -46,11 +59,13 @@ fun AddEditScreen (
             FloatingActionButton(onClick = {
                 viewModel.onEvent(
                     EditEvent.SaveNote(
-                    Note(
-                        title = titleState.text,
-                        content = contentState.text
+                        Note(
+                            title = viewModel.editState.value.titleState,
+                            content = viewModel.editState.value.contentState,
+                            location = viewModel.editState.value.locationState
+                        )
                     )
-                ))
+                )
                 navController.navigate(Screen.NotesScreen.route)
             }) {
                 Icon(
@@ -73,7 +88,7 @@ fun AddEditScreen (
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = titleState.text,
+                        value = viewModel.editState.value.titleState,
                         onValueChange = {
                             viewModel.onEvent(EditEvent.EnteredTitle(it))
                         },
@@ -93,9 +108,9 @@ fun AddEditScreen (
                     )
                     TextField(
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxWidth(),
                         maxLines = 30,
-                        value = contentState.text,
+                        value = viewModel.editState.value.contentState,
                         onValueChange = {
                             viewModel.onEvent(EditEvent.EnteredContent(it))
                         },
@@ -113,6 +128,38 @@ fun AddEditScreen (
                             disabledIndicatorColor = Color.Transparent
                         )
                     )
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 15.dp, end = 15.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Location Tag:",
+                            color = Color.DarkGray
+                        )
+                        Checkbox(
+                            checked = viewModel.editState.value.mapState,
+                            onCheckedChange = { viewModel.onEvent(EditEvent.ToggledLocation(it)) }
+                        )
+                    }
+                    if (viewModel.editState.value.mapState) {
+                        Spacer(modifier = Modifier.size(8.dp))
+                        GoogleMap(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            cameraPositionState = cameraPositionState
+                        ) {
+                            /*
+                            Marker(
+                                state = MarkerState(position = ),
+                                title = "Singapore",
+                                snippet = "Marker in Singapore"
+                            )
+                            */
+                        }
+                    }
                 }
             )
         }

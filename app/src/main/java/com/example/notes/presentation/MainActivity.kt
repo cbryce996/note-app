@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import com.example.notes.di.AppModule
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.components.*
+import com.example.notes.presentation.map.MapScreen
 import com.example.notes.presentation.screens.AccountScreen
 import com.example.notes.presentation.screens.LoginScreen
 import com.example.notes.presentation.screens.SignupScreen
@@ -62,6 +63,12 @@ class MainActivity() : ComponentActivity() {
                         }
                         composable(route = Screen.SignupScreen.route) {
                             SignupScreen(
+                                navController = navController,
+                                appViewModel = appViewModel
+                            )
+                        }
+                        composable(route = Screen.MapScreen.route) {
+                            MapScreen(
                                 navController = navController,
                                 appViewModel = appViewModel
                             )

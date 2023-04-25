@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notes.application.note.NoteService
+import com.example.notes.presentation.app.AppViewModel
+import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.notes.events.NotesEvent
 import com.example.notes.presentation.notes.states.NotesState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val noteService: NoteService
+    private val noteService: NoteService,
+    private val appViewModel: AppViewModel
 ) : ViewModel() {
 
     // Variables for handling notes
@@ -43,7 +46,7 @@ class NotesViewModel @Inject constructor(
                 getNotes()
             }
             is NotesEvent.EditNote -> {
-
+                appViewModel.onEvent(AppEvent.EditNote(event.note))
             }
         }
     }

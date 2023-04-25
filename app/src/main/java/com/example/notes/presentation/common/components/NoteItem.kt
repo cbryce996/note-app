@@ -1,10 +1,12 @@
 package com.example.notes.presentation.common.components
 
+import android.location.Geocoder
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,7 +26,6 @@ fun NoteItem (
     onDeleteClick: () -> Unit,
     onNoteClick: () -> Unit
 ) {
-    val swipeableState = rememberSwipeableState(0)
     Box(
         modifier = modifier
     ) {
@@ -50,9 +51,29 @@ fun NoteItem (
             Text(
                 text = note.content,
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 10,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
+            if (note.location != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .padding(end = 3.dp)
+                            .size(15.dp),
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = "Delete note"
+                    )
+                    Text(
+                        text = "Location",
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 10,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
         IconButton(
             modifier = Modifier

@@ -1,4 +1,4 @@
-package com.example.notes.presentation.components
+package com.example.notes.presentation.map
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,10 +21,16 @@ import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.notes.events.NotesEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.notes.NotesViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesScreen(
+fun MapScreen(
     navController: NavController,
     appViewModel: AppViewModel,
     viewModel: NotesViewModel = hiltViewModel()
@@ -31,12 +38,18 @@ fun NotesScreen(
     // Variables for notes
     val notes = viewModel.notes.value
 
+    val singapore = LatLng(1.35, 103.87)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(singapore, 10f)
+    }
+
+
     Scaffold(
         topBar = {
             TopBar(
-                hasCloseButton = false,
+                hasCloseButton = true,
                 navController = navController,
-                titleText = "Your Notes"
+                titleText = "Notes Map"
             )
         },
         bottomBar = {
@@ -64,26 +77,16 @@ fun NotesScreen(
                     .padding(it)
                     .fillMaxSize(),
                 content = {
-                    LazyColumn(modifier = Modifier
-                        .fillMaxSize(),
-                        content = {
-                            items(notes.notes) { note ->
-                                NoteItem(
-                                    note = note,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = 15.dp, end = 15.dp, top = 15.dp),
-                                    onDeleteClick = {
-                                        viewModel.onEvent(NotesEvent.DeleteNote(note))
-                                    },
-                                    onNoteClick = {
-                                        viewModel.onEvent(NotesEvent.EditNote(note))
-                                        navController.navigate(Screen.AddEditScreen.route)
-                                    }
-                                )
-                            }
-                        }
-                    )
+                    GoogleMap(
+                        modifier = Modifier.fillMaxSize(),
+                        cameraPositionState = cameraPositionState
+                    ) {
+                        Marker(
+                            state = MarkerState(position = singapore),
+                            title = "Singapore",
+                            snippet = "Marker in Singapore"
+                        )
+                    }
                 }
             )
         }

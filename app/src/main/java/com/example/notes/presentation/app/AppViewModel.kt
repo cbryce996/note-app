@@ -1,11 +1,13 @@
 package com.example.notes.presentation.app
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.notes.domain.user.User
+import com.example.notes.domain.note.Note
 import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.app.states.LoggedInState
+import com.example.notes.presentation.app.states.NoteState
 import com.example.notes.presentation.app.states.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,6 +23,10 @@ class AppViewModel @Inject constructor(
     private val _user = mutableStateOf(UserState())
     val user: State<UserState> = _user
 
+    // Handle note state
+    private val _note = mutableStateOf(NoteState())
+    val note: State<NoteState> = _note
+
     fun onEvent(event: AppEvent) {
         when (event) {
             is AppEvent.LogUserIn -> {
@@ -29,6 +35,16 @@ class AppViewModel @Inject constructor(
                 )
                 _loggedIn.value = loggedIn.value.copy(
                     loggedIn = true
+                )
+            }
+            is AppEvent.EditNote -> {
+                _note.value = note.value.copy(
+                    note = event.note
+                )
+            }
+            is AppEvent.NewNote -> {
+                _note.value = note.value.copy(
+                    note = Note()
                 )
             }
             is AppEvent.LogUserOut -> {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
@@ -41,12 +42,14 @@ fun BottomBar(
                 icon = {
                     Icon(
                         modifier = Modifier.size(30.dp),
-                        imageVector = Icons.Default.Search,
+                        imageVector = Icons.Default.LocationOn,
                         contentDescription = ""
                     )
                 },
                 selected = (false),
-                onClick = {}
+                onClick = {
+                    navController.navigate(Screen.MapScreen.route)
+                }
             )
             BottomNavigationItem(
                 icon = {

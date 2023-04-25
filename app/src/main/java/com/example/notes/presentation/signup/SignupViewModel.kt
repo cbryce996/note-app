@@ -1,27 +1,20 @@
 package com.example.notes.presentation.signup
 
-import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.notes.application.user.UserService
 import com.example.notes.domain.user.User
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.app.events.AppEvent
-import com.example.notes.presentation.common.states.TextFieldState
-import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.presentation.common.states.ErrorState
-import com.example.notes.presentation.signup.states.EmailState
-import com.example.notes.presentation.signup.states.PasswordState
-import com.example.notes.presentation.signup.states.UsernameState
+import com.example.notes.presentation.signup.events.SignupEvent
 import com.example.notes.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.sign
 
 
 // TODO: Make generic form component with validation
