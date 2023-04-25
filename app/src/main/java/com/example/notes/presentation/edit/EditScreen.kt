@@ -1,5 +1,7 @@
 package com.example.notes.presentation.components
 
+import androidx.compose.animation.core.Transition
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -11,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notes.domain.location.Location
 import com.example.notes.domain.note.Note
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.common.components.BottomBar
@@ -18,12 +21,7 @@ import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.edit.events.EditEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.edit.EditViewModel
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,15 +30,6 @@ fun AddEditScreen (
     appViewModel: AppViewModel,
     viewModel: EditViewModel = hiltViewModel(),
 ) {
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(
-            LatLng(
-                viewModel.editState.value.locationState?.latitude ?: 0.0,
-                viewModel.editState.value.locationState?.longitude ?: 0.0
-            ),
-        1f)
-    }
-
     Scaffold(
         topBar = {
             TopBar(
@@ -58,13 +47,7 @@ fun AddEditScreen (
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 viewModel.onEvent(
-                    EditEvent.SaveNote(
-                        Note(
-                            title = viewModel.editState.value.titleState,
-                            content = viewModel.editState.value.contentState,
-                            location = viewModel.editState.value.locationState
-                        )
-                    )
+                    EditEvent.SaveNote()
                 )
                 navController.navigate(Screen.NotesScreen.route)
             }) {
@@ -149,15 +132,13 @@ fun AddEditScreen (
                         GoogleMap(
                             modifier = Modifier
                                 .fillMaxSize(),
-                            cameraPositionState = cameraPositionState
+                            cameraPositionState = viewModel.editState.value.mapLocationState ?: CameraPositionState(),
                         ) {
-                            /*
                             Marker(
-                                state = MarkerState(position = ),
+                                state = MarkerState(position = viewModel.editState.value.mapLocationState!!.position.target),
                                 title = "Singapore",
                                 snippet = "Marker in Singapore"
                             )
-                            */
                         }
                     }
                 }

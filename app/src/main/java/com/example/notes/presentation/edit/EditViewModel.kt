@@ -10,6 +10,9 @@ import com.example.notes.domain.location.Location
 import com.example.notes.domain.note.Note
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.edit.events.EditEvent
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,8 +28,14 @@ class EditViewModel @Inject constructor(
 
     init {
         _editState.value = editState.value.copy(
-            titleState = appViewModel.note.value.note?.title ?: "",
-            contentState = appViewModel.note.value.note?.content ?: "",
+            titleState = appViewModel.note.value.note!!.title,
+            contentState = appViewModel.note.value.note!!.content,
+            mapLocationState = CameraPositionState(CameraPosition.fromLatLngZoom(
+                LatLng(
+                    appViewModel.note.value.note!!.location?.latitude ?: 0.0,
+                    appViewModel.note.value.note!!.location?.longitude ?: 0.0
+                ),
+            6f)),
             mapState = appViewModel.note.value.note?.location != null
         )
     }
@@ -52,9 +61,12 @@ class EditViewModel @Inject constructor(
                 viewModelScope.launch {
                     noteService.createNote(
                         Note(
-                            title = event.value.title,
-                            content = event.value.content,
-                            location = event.value.location,
+                            title = editState.value.titleState,
+                            content = editState.value.contentState,
+                            location = Location(
+                                longitude = editState.value.mapLocationState!!.position.target.longitude,
+                                latitude = editState.value.mapLocationState!!.position.target.latitude
+                            ),
                             id = appViewModel.note.value.note?.id
                         )
                     )
