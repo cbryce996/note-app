@@ -58,7 +58,7 @@ fun AccountScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = appViewModel.user.value.user?.username ?: "Not found",
+                        value = appViewModel.appState.value.userState?.username ?: "Not found",
                         onValueChange = {
                         },
                         readOnly = true,
@@ -77,7 +77,7 @@ fun AccountScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = appViewModel.user.value.user?.password ?: "Not found",
+                        value = appViewModel.appState.value.userState?.password ?: "Not found",
                         onValueChange = {
                         },
                         readOnly = true,
@@ -96,7 +96,7 @@ fun AccountScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         maxLines = 30,
-                        value = appViewModel.user.value.user?.email ?: "Not found",
+                        value = appViewModel.appState.value.userState?.email ?: "Not found",
                         onValueChange = {
                         },
                         readOnly = true,

@@ -21,29 +21,18 @@ import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.notes.events.NotesEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.notes.NotesViewModel
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     navController: NavController,
     appViewModel: AppViewModel,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: MapViewModel = hiltViewModel()
 ) {
-    // Variables for notes
-    val notes = viewModel.notes.value
-
-    val singapore = LatLng(1.35, 103.87)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(singapore, 10f)
-    }
-
-
     Scaffold(
         topBar = {
             TopBar(
@@ -60,7 +49,6 @@ fun MapScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                appViewModel.onEvent(AppEvent.NewNote())
                 navController.navigate(Screen.AddEditScreen.route)
             }) {
                 Icon(
@@ -79,13 +67,22 @@ fun MapScreen(
                 content = {
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
-                        cameraPositionState = cameraPositionState
+                        cameraPositionState = viewModel.mapState.value.mapLocationState ?: CameraPositionState()
                     ) {
-                        Marker(
-                            state = MarkerState(position = singapore),
-                            title = "Singapore",
-                            snippet = "Marker in Singapore"
-                        )
+                        for (note in viewModel.mapState.value.notes) {
+                            if (note?.location != null) {
+                                Marker(
+                                    state = MarkerState(
+                                        position = LatLng(
+                                            note.location.latitude,
+                                            note.location.longitude
+                                        )
+                                    ),
+                                    title = note.title,
+                                    snippet = note.content
+                                )
+                            }
+                        }
                     }
                 }
             )

@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +60,7 @@ fun BottomBar(
                 },
                 selected = (false),
                 onClick = {
-                    if (appViewModel.loggedIn.value.loggedIn) {
+                    if (appViewModel.appState.value.loggedInState) {
                         navController.navigate(Screen.AccountScreen.route)
                     } else {
                         navController.navigate(Screen.LoginScreen.route)

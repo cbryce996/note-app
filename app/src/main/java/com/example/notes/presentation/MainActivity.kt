@@ -1,12 +1,22 @@
 package com.example.notes.presentation
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.NonNull
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,6 +31,9 @@ import com.example.notes.presentation.screens.LoginScreen
 import com.example.notes.presentation.screens.SignupScreen
 import com.example.notes.presentation.util.Screen
 import com.example.notes.ui.theme.AppTheme
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,8 +43,30 @@ import javax.inject.Inject
 class MainActivity() : ComponentActivity() {
     @Inject
     lateinit var appViewModel: AppViewModel
+    private fun checkLocationPermissions() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                1
+            )
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        checkLocationPermissions()
+
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
@@ -85,7 +120,7 @@ class MainActivity() : ComponentActivity() {
                                 }
                             )
                         ) {
-                            //val id = it.arguments?.getLong("noteId") ?: null
+                            val id = it.arguments?.getLong("noteId") ?: null
                             AddEditScreen(
                                 navController = navController,
                                 appViewModel = appViewModel

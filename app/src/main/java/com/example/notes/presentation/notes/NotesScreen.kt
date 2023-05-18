@@ -47,7 +47,6 @@ fun NotesScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                appViewModel.onEvent(AppEvent.NewNote())
                 navController.navigate(Screen.AddEditScreen.route)
             }) {
                 Icon(
@@ -65,6 +64,7 @@ fun NotesScreen(
                     .fillMaxSize(),
                 content = {
                     LazyColumn(modifier = Modifier
+                        .padding(bottom = 15.dp)
                         .fillMaxSize(),
                         content = {
                             items(notes.notes) { note ->
@@ -77,8 +77,8 @@ fun NotesScreen(
                                         viewModel.onEvent(NotesEvent.DeleteNote(note))
                                     },
                                     onNoteClick = {
-                                        viewModel.onEvent(NotesEvent.EditNote(note))
-                                        navController.navigate(Screen.AddEditScreen.route)
+                                        navController.navigate(Screen.AddEditScreen.route
+                                        + "?noteId=${note.id}")
                                     }
                                 )
                             }

@@ -8,7 +8,6 @@ import com.example.notes.application.note.NoteService
 import com.example.notes.presentation.app.AppViewModel
 import com.example.notes.presentation.app.events.AppEvent
 import com.example.notes.presentation.notes.events.NotesEvent
-import com.example.notes.presentation.notes.states.NotesState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -45,9 +44,6 @@ class NotesViewModel @Inject constructor(
                 }
                 getNotes()
             }
-            is NotesEvent.EditNote -> {
-                appViewModel.onEvent(AppEvent.EditNote(event.note))
-            }
         }
     }
 
@@ -62,5 +58,4 @@ class NotesViewModel @Inject constructor(
                 }
         }
     }
-
 }

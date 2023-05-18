@@ -1,6 +1,9 @@
 package com.example.notes.di
 
 import android.app.Application
+import android.content.Context
+import android.location.LocationManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.room.Room
@@ -11,9 +14,11 @@ import com.example.notes.infrastructure.persistence.NoteDatabase
 import com.example.notes.infrastructure.repositories.NoteRepository
 import com.example.notes.infrastructure.repositories.UserRepository
 import com.example.notes.presentation.app.AppViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -61,5 +66,14 @@ class AppModule {
     @Singleton
     fun provideAppViewModel(): AppViewModel {
         return AppViewModel()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFusedLocation(
+        @ApplicationContext
+        context: Context
+    ): FusedLocationProviderClient {
+        return FusedLocationProviderClient(context)
     }
 }

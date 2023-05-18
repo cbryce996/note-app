@@ -21,6 +21,7 @@ import com.example.notes.presentation.common.components.TopBar
 import com.example.notes.presentation.edit.events.EditEvent
 import com.example.notes.presentation.util.Screen
 import com.example.notes.presentation.edit.EditViewModel
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,9 +134,17 @@ fun AddEditScreen (
                             modifier = Modifier
                                 .fillMaxSize(),
                             cameraPositionState = viewModel.editState.value.mapLocationState ?: CameraPositionState(),
+                            onMapClick = {
+                                viewModel.onEvent(EditEvent.ClickedMap(
+                                    LatLng(
+                                        it.latitude,
+                                        it.longitude
+                                    )
+                                ))
+                            }
                         ) {
                             Marker(
-                                state = MarkerState(position = viewModel.editState.value.mapLocationState!!.position.target),
+                                state = MarkerState(position = viewModel.editState.value.markerLocationState ?: LatLng(0.0,0.0)),
                                 title = "Singapore",
                                 snippet = "Marker in Singapore"
                             )
