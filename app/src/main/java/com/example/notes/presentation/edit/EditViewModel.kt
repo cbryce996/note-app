@@ -39,23 +39,25 @@ class EditViewModel @Inject constructor(
         savedStateHandle.get<Long>("noteId")?.let { noteId ->
             if (noteId == 0.toLong()) {
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { result ->
-                    _editState.value = editState.value.copy(
-                        titleState = "Title",
-                        contentState = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras diam purus, malesuada eu justo quis, auctor dignissim elit.",
-                        mapLocationState = CameraPositionState(
-                            CameraPosition.fromLatLngZoom(
-                                LatLng(
-                                    result.latitude,
-                                    result.longitude
-                                ),
-                                6f
+                    if (result != null) {
+                        _editState.value = editState.value.copy(
+                            titleState = "Title",
+                            contentState = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras diam purus, malesuada eu justo quis, auctor dignissim elit.",
+                            mapLocationState = CameraPositionState(
+                                CameraPosition.fromLatLngZoom(
+                                    LatLng(
+                                        result.latitude,
+                                        result.longitude
+                                    ),
+                                    6f
+                                )
+                            ),
+                            markerLocationState = LatLng(
+                                result.latitude,
+                                result.longitude
                             )
-                        ),
-                        markerLocationState = LatLng(
-                            result.latitude,
-                            result.longitude
                         )
-                    )
+                    }
                 }
             } else {
                 viewModelScope.launch {

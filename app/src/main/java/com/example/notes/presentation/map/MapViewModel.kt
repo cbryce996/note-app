@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.notes.application.note.NoteService
 import com.example.notes.presentation.notes.NotesState
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -32,17 +33,19 @@ class MapViewModel @Inject constructor(
     init {
         getNotes()
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { result ->
-            _mapState.value = mapState.value.copy(
-                mapLocationState = CameraPositionState(
-                    CameraPosition.fromLatLngZoom(
-                        LatLng(
-                            result.latitude,
-                            result.longitude
-                        ),
-                        6f
-                    )
-                ),
-            )
+            if (result != null) {
+                _mapState.value = mapState.value.copy(
+                    mapLocationState = CameraPositionState(
+                        CameraPosition.fromLatLngZoom(
+                            LatLng(
+                                result.latitude,
+                                result.longitude
+                            ),
+                            6f
+                        )
+                    ),
+                )
+            }
         }
     }
 

@@ -32,6 +32,7 @@ import com.example.notes.presentation.screens.SignupScreen
 import com.example.notes.presentation.util.Screen
 import com.example.notes.ui.theme.AppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +44,8 @@ import javax.inject.Inject
 class MainActivity() : ComponentActivity() {
     @Inject
     lateinit var appViewModel: AppViewModel
+    @Inject
+    lateinit var locationProviderClient: FusedLocationProviderClient
     private fun checkLocationPermissions() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -62,6 +65,7 @@ class MainActivity() : ComponentActivity() {
             )
         }
     }
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
